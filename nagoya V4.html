@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 名古屋親子櫻花之旅 2026 (完美整合版)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS 變數與基礎設定 --- */
+        :root {
+            --sakura-pink: #ffdae0;
+            --main-pink: #f8bbd0;
+            --deep-pink: #d81b60;
+            --accent-blue: #4285F4;
+            --glass: rgba(255, 255, 255, 0.95);
+            --shadow: 0 8px 25px rgba(0,0,0,0.06);
+            --bg-gradient: linear-gradient(135deg, #fff0f4 0%, #ffe3e8 100%);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 20px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            border-radius: 25px;
+            color: white;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 0;
+        }
+
+        header h1 {
+            position: relative;
+            z-index: 1;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* --- 航班資訊 (V4樣式) --- */
+        .flight-box {
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .flight-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #ddd;
+            padding: 10px 0;
+        }
+        .flight-row:last-child { border-bottom: none; }
+        .flight-tag {
+            background: var(--deep-pink);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+
+        /* --- 行程卡片 (V4手風琴樣式) --- */
+        .day-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 6px solid var(--deep-pink);
+            box-shadow: var(--shadow);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffebee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .day-title { font-size: 1.4rem; color: var(--deep-pink); font-weight: 700; }
+        .day-tag { background: #ffebee; color: var(--deep-pink); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+
+        .timeline-item {
+            position: relative;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .timeline-item:last-child { border-bottom: none; }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .timeline-header:hover { background-color: #fce4ec; }
+
+        .time {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            color: var(--deep-pink);
+            width: 70px;
+            font-size: 1.1rem;
+        }
+
+        .event-title {
+            font-weight: 500;
+            font-size: 1.05rem;
+            flex: 1;
+        }
+
+        .toggle-icon {
+            font-size: 0.8rem;
+            color: #888;
+            transition: transform 0.3s;
+        }
+        
+        .timeline-item.active .toggle-icon { transform: rotate(180deg); }
+
+        .event-details {
+            display: none;
+            background: #fafafa;
+            padding: 15px;
+            margin: 5px 0 5px 70px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #555;
+            border-left: 3px solid #ddd;
+        }
+        
+        .event-details.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-point {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: start;
+        }
+        .detail-point::before {
+            content: "•";
+            color: var(--deep-pink);
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .food-section {
+            background: #fff8e1;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #ffe0b2;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .food-item { display: flex; align-items: center; font-size: 0.9rem; font-weight: 500; }
+
+        /* --- 地圖按鈕與容器 --- */
+        .btn-map {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+        .btn-map:hover { background: #3367d6; }
+
+        .map-container {
+            display: none;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #eee;
+        }
+        .map-container.active { display: block; }
+        .map-container iframe { width: 100%; height: 350px; border: 0; }
+
+        /* --- 購物指南 (V3樣式) --- */
+        .shopping-section {
+            margin-top: 50px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            border-top: 6px solid #ff9800;
+        }
+
+        .shopping-section h2 {
+            text-align: center;
+            color: #e65100;
+            margin-bottom: 30px;
+        }
+
+        .shopping-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .shopping-card {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #ffe082;
+            transition: transform 0.2s;
+        }
+
+        .shopping-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255,152,0,0.15);
+        }
+
+        .shopping-card h4 {
+            margin: 0 0 10px 0;
+            color: #d84315;
+            font-size: 1.1rem;
+        }
+
+        .shopping-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #5d4037;
+        }
+
+        .shopping-card .buy-location {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            background: #ffe082;
+            color: #d84315;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        /* --- 總結列表格 (V3樣式) --- */
+        .summary-section {
+            margin-top: 30px;
+            background: var(--glass);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .summary-section h2 {
+            text-align: center;
+            color: #d81b60;
+            margin-bottom: 30px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-table th {
+            background-color: #ffebee;
+            color: #c2185b;
+            font-weight: bold;
+        }
+
+        .table-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .table-link:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .event-details { margin-left: 0; }
+            .flight-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🌸 名古屋親子櫻花之旅 (最終版)</h1>
+        <div class="flight-box">
+            <div class="flight-row">
+                <div><span class="flight-tag">去程</span> <strong>3/30 (日)</strong></div>
+                <div>華航 CI154 (07:35 TPE ➔ 11:05 NGO)</div>
+            </div>
+            <div class="flight-row">
+                <div><span class="flight-tag">回程</span> <strong>4/04 (五)</strong></div>
+                <div>華航 CI155 (12:05 NGO ➔ 14:40 TPE)</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="day-card">
+        <div class="day-header">
+            <span class="day-title">3/30 (日) 鐵道迷之夢</span>
+            <span class="day-tag">宿：樂高飯店</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">11:05</span>
+                <span class="event-title">✈️ 抵達中部國際機場 (NGO)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">通關後，跟隨指標搭乘名鐵 μ-SKY 前往名古屋站。</div>
+                <div class="detail-point">若小孩肚子餓，機場 4F 有「矢場豬排」與「蝦餅」可先吃或買。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">14:00</span>
+                <span class="event-title">🚅 磁浮鐵道館 (SCMAGLEV and Railway Park)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**必看亮點**：C62 蒸氣火車、歷代新幹線實體車廂展示。</div>
+                <div class="detail-point">**親子推薦**：2F 有「兒童遊戲區」與「模擬駕駛體驗」(需抽籤/付費)。</div>
+                <div class="detail-point">館內有販售超可愛的「新幹線造型便當」，可作為點心。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">17:30</span>
+                <span class="event-title">✨ Maker's Pier 散策 & 晚餐</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">位於樂高樂園旁的戶外商場，有許多餐廳與體驗工坊。</div>
+                <div class="detail-point">晚上點燈後氣氛很好，還有整點的水舞秀 (噴水池)。</div>
+            </div>
+        </div>
+
+        <div class="food-section">
+            <div class="food-item">🍜 午：名站拉麵街</div>
+            <div class="food-item">🐷 晚：矢場味噌豬排 (Maker's Pier店)</div>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map1')">🗺️ 顯示路線：機場 ➔ 樂高飯店</button>
+        <div id="map1" class="map-container">
+            <iframe src="https://maps.google.com/maps?saddr=Chubu+Centrair+International+Airport&daddr=LEGOLAND+Japan+Hotel&output=embed" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="day-header">
+            <span class="day-title">3/31 (一) 樂高樂園全攻略</span>
+            <span class="day-tag">宿：樂高飯店</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">09:30</span>
+                <span class="event-title">🎢 LEGOLAND Japan (全日遊玩)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**推薦設施 (4歲)**：Duplo Valley (得寶谷)、Submarine Adventure (潛水艇)、Driving School (駕駛學校-幼兒版)。</div>
+                <div class="detail-point">**Miniland**：用千萬塊樂高積木堆砌的日本縮影，必拍照！</div>
+                <div class="detail-point">午餐建議在園區內的「積木漢堡餐廳」用餐，造型可愛。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">15:00</span>
+                <span class="event-title">🐠 SEA LIFE Nagoya 水族館</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">位於樂高樂園正對面，憑套票可進入。</div>
+                <div class="detail-point">特色是結合「浦島太郎」傳說的龍宮城造景水槽。</div>
+                <div class="detail-point">這是一座「體驗型」水族館，有很多按鈕和觸摸池可以讓小孩互動。</div>
+            </div>
+        </div>
+
+        <div class="food-section">
+            <div class="food-item">🍔 午：園區主題餐廳</div>
+            <div class="food-item">🍽️ 晚：飯店自助餐</div>
+        </div>
+    </div>
+
+    <div class="day-card" style="border-left-color: #039be5;">
+        <div class="day-header">
+            <span class="day-title">4/01 (二) 虎鯨與舒適轉場</span>
+            <span class="day-tag" style="color:#039be5;">宿：萬豪飯店</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">10:00</span>
+                <span class="event-title">🚖 計程車轉場 (方案 B)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**不用搬行李！** 請飯店叫大車，直達萬豪 15F 大廳。</div>
+                <div class="detail-point">將行李寄放於萬豪櫃檯後，輕裝出發去水族館。</div>
+                <div class="detail-point">下方有準備給司機看的日文溝通字卡。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">11:30</span>
+                <span class="event-title">🐬 名古屋港水族館</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**必看王牌**：日本唯二能看到的「虎鯨 (Killer Whale)」表演。</div>
+                <div class="detail-point">北館看鯨豚，南館看南極企鵝與沙丁魚風暴。</div>
+                <div class="detail-point">午餐可在水族館內的景觀餐廳解決，順便休息。</div>
+            </div>
+        </div>
+
+        <div class="food-section">
+            <div class="food-item">🐟 午：水族館餐廳</div>
+            <div class="food-item">🍱 晚：備長鰻魚飯 (JR Gate Tower)</div>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map3')" style="background:#039be5;">🗺️ 顯示路線：萬豪 ➔ 港水族館</button>
+        <div id="map3" class="map-container">
+            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Port+of+Nagoya+Public+Aquarium&output=embed" loading="lazy"></iframe>
+        </div>
+
+        <div style="background:#e1f5fe; padding:15px; border-radius:10px; margin-top:15px; border:2px solid #b3e5fc;">
+            <strong style="color:#0277bd;">🚕 給司機的轉場字卡：</strong>
+            <p style="background:white; padding:10px; margin:5px 0; border-radius:5px; color:#555;">
+                大型タクシーを一台呼んでいただけますか？<br>
+                大人2名、子供1名、大型スーツケース3個あります。<br>
+                <strong>目的地：名古屋マリオットアソシアホテル (15F ロビー)</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="day-card" style="border-left-color: #7cb342;">
+        <div class="day-header">
+            <span class="day-title">4/02 (三) 吉卜力大倉庫</span>
+            <span class="day-tag" style="color:#7cb342;">宿：萬豪飯店</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">10:00</span>
+                <span class="event-title">🍃 吉卜力公園 (Ghibli Park)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**區域**：今日專攻「吉卜力大倉庫 (Ghibli's Grand Warehouse)」。</div>
+                <div class="detail-point">**親子必去**：「貓巴士室 (Cat Bus Room)」，這是專屬小朋友的軟墊遊戲區，大人不能進去玩喔！</div>
+                <div class="detail-point">**展覽**：名場面展 (可以跟無臉男拍照)，建議一入園先去排隊，人潮較少。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">18:30</span>
+                <span class="event-title">🛍️ 名站周邊採買</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">萬豪樓下即是「高島屋百貨」，對面是「Bic Camera」。</div>
+                <div class="detail-point">建議今日先買電器或大型藥妝，直接拿回飯店放。</div>
+            </div>
+        </div>
+
+        <div class="food-section">
+            <div class="food-item">🥪 午：園區輕食</div>
+            <div class="food-item">🍲 晚：山本屋味噌烏龍</div>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map4')" style="background:#7cb342;">🗺️ 顯示路線：萬豪 ➔ 吉卜力</button>
+        <div id="map4" class="map-container">
+            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Ghibli+Park,+Aichi&output=embed" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <div class="day-card" style="border-left-color: #fb8c00;">
+        <div class="day-header">
+            <span class="day-title">4/03 (四) 櫻花與燒肉</span>
+            <span class="day-tag" style="color:#fb8c00;">宿：萬豪飯店</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">10:00</span>
+                <span class="event-title">🏯 名古屋城 (賞櫻)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**賞櫻熱點**：護城河沿岸與城內廣場，約有 1000 株櫻花。</div>
+                <div class="detail-point">園區內道路平坦，非常適合推推車散步。</div>
+                <div class="detail-point">偶爾會遇到「忍者隊」出來表演，可以合照。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">18:30</span>
+                <span class="event-title">🥩 敘敘苑燒肉 (最後一晚大餐)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">位於 JR Central Towers 13F (萬豪樓下)。</div>
+                <div class="detail-point">**必點**：上等牛五花、牛舌。</div>
+                <div class="detail-point">**親子貼心**：餐後會送愛心形狀的冰淇淋，小朋友會很開心！</div>
+            </div>
+        </div>
+
+        <div class="food-section">
+            <div class="food-item">🍢 午：金鯱橫丁</div>
+            <div class="food-item">🥩 晚：敘敘苑燒肉</div>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map5')" style="background:#fb8c00;">🗺️ 顯示路線：萬豪 ➔ 名古屋城</button>
+        <div id="map5" class="map-container">
+            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Nagoya+Castle&output=embed" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <div class="day-card" style="border-left-color: #757575;">
+        <div class="day-header">
+            <span class="day-title">4/04 (五) 再見名古屋</span>
+            <span class="day-tag" style="color:#757575;">✈️ CI155</span>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">08:30</span>
+                <span class="event-title">🍳 萬豪飯店早餐</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">萬豪早餐非常豐盛，有現做的歐姆蛋和名古屋特色小倉吐司。</div>
+                <div class="detail-point">悠閒吃完早餐後，回房整理行李，準備退房。</div>
+            </div>
+        </div>
+         <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">10:00</span>
+                <span class="event-title">前往機場 (μ-SKY)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">搭乘名鐵 μ-SKY 特急，約 28 分鐘抵達機場。</div>
+                <div class="detail-point">抵達後先去櫃檯托運行李，接著逛機場免稅店。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="shopping-section">
+        <h2>🛍️ 名古屋必買購物指南 (伴手禮推薦)</h2>
+        <div class="shopping-grid">
+            <div class="shopping-card">
+                <h4>🦐 蝦餅 (坂角總本舖 ゆかり)</h4>
+                <p>長輩與小孩最愛！口感硬脆、鮮味濃郁。如果想找造型可愛的，可以買另一家「桂新堂」的蝦餅。</p>
+                <span class="buy-location">📍 萬豪樓下高島屋 B1 / 機場</span>
+            </div>
+            <div class="shopping-card">
+                <h4>🍡 赤福 (Akafuku)</h4>
+                <p>綿密紅豆泥包裹著軟糯麻糬，甜而不膩。因保存期限只有短短幾天，強烈建議最後一天在機場購買。</p>
+                <span class="buy-location">📍 名古屋車站 Kiosk / 機場免稅店</span>
+            </div>
+            <div class="shopping-card">
+                <h4>🐸 青柳小青蛙饅頭</h4>
+                <p>名古屋超人氣和菓子「青柳總本家」出品，青蛙造型超級可愛，內餡是紅豆沙，4歲小朋友一定會喜歡！</p>
+                <span class="buy-location">📍 名古屋車站內伴手禮店 / 高島屋</span>
+            </div>
+            <div class="shopping-card">
+                <h4>🍞 小倉紅豆吐司抹醬</h4>
+                <p>把名古屋特有的「紅豆吐司」早餐帶回台灣！買一罐紅豆抹醬，回台灣烤厚片吐司加上奶油，完美還原。</p>
+                <span class="buy-location">📍 名站超市 / 伴手禮土產店</span>
+            </div>
+            <div class="shopping-card">
+                <h4>🍜 味仙 台灣拉麵 (泡麵版)</h4>
+                <p>名古屋特產「台灣拉麵」其實台灣吃不到！買幾包微辣帶勁的即食麵回台灣當宵夜非常過癮。</p>
+                <span class="buy-location">📍 名站內便利商店 / 機場</span>
+            </div>
+            <div class="shopping-card">
+                <h4>🍗 世界之山將 / 風來坊 點心</h4>
+                <p>除了現場吃雞翅，他們也有出「手羽先口味」的洋芋片或米果，鹹香重口味，非常適合買回台灣當下酒菜。</p>
+                <span class="buy-location">📍 機場 / 名古屋車站</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <h2>📍 景點與餐廳快速導航總覽</h2>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>類別</th>
+                    <th>名稱</th>
+                    <th>Google Map 連結</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🏨 飯店</td>
+                    <td>樂高樂園飯店</td>
+                    <td><a href="https://maps.app.goo.gl/BvqD324QpD59HCHH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🏨 飯店</td>
+                    <td>名古屋萬豪飯店</td>
+                    <td><a href="https://maps.app.goo.gl/YqS1z7v1Lp13J3wK9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🎡 景點</td>
+                    <td>磁浮鐵道館</td>
+                    <td><a href="https://maps.app.goo.gl/uQ7k145H7g9yHqZq7" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🎡 景點</td>
+                    <td>名古屋港水族館</td>
+                    <td><a href="https://maps.app.goo.gl/GZ5D7e3D7D2Q31mLA" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                 <tr>
+                    <td>🎡 景點</td>
+                    <td>吉卜力公園</td>
+                    <td><a href="https://maps.app.goo.gl/X9L2Q3k4Y1N5pQW69" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🎡 景點</td>
+                    <td>名古屋城</td>
+                    <td><a href="https://maps.app.goo.gl/V11L4Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🍱 餐廳</td>
+                    <td>矢場味噌豬排 (Maker's Pier店)</td>
+                    <td><a href="https://maps.app.goo.gl/F6Q8S7H3L2X1v9cZ6" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                 <tr>
+                    <td>🍱 餐廳</td>
+                    <td>備長鰻魚飯 (JR Gate Tower)</td>
+                    <td><a href="https://maps.app.goo.gl/N9L8Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🍱 餐廳</td>
+                    <td>敘敘苑燒肉 (JR Central Towers)</td>
+                    <td><a href="https://maps.app.goo.gl/M8L8Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // 手風琴展開功能
+    function toggleDetail(element) {
+        const details = element.nextElementSibling;
+        const parent = element.parentElement;
+        
+        // 切換顯示狀態
+        if (details.classList.contains('show')) {
+            details.classList.remove('show');
+            parent.classList.remove('active');
+        } else {
+            details.classList.add('show');
+            parent.classList.add('active');
+        }
+    }
+
+    // 地圖開關功能
+    function toggleMap(mapId) {
+        const mapDiv = document.getElementById(mapId);
+        if (mapDiv.classList.contains('active')) {
+            mapDiv.classList.remove('active');
+        } else {
+            mapDiv.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>
