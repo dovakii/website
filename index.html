@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 名古屋親子櫻花之旅 2026 (完美整合版)</title>
+    <title>🌸 名古屋親子櫻花之旅 2026 (最終完美版)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* --- CSS 變數與基礎設定 --- */
@@ -60,7 +60,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* --- 航班資訊 (V4樣式) --- */
+        /* --- 航班資訊 --- */
         .flight-box {
             position: relative;
             z-index: 1;
@@ -89,7 +89,7 @@
             margin-right: 8px;
         }
 
-        /* --- 行程卡片 (V4手風琴樣式) --- */
+        /* --- 行程卡片 --- */
         .day-card {
             background: var(--glass);
             border-radius: 20px;
@@ -222,7 +222,7 @@
         .map-container.active { display: block; }
         .map-container iframe { width: 100%; height: 350px; border: 0; }
 
-        /* --- 購物指南 (V3樣式) --- */
+        /* --- 購物指南 --- */
         .shopping-section {
             margin-top: 50px;
             background: #fff;
@@ -250,11 +250,23 @@
             border-radius: 15px;
             border: 1px solid #ffe082;
             transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
         }
 
         .shopping-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(255,152,0,0.15);
+        }
+
+        .shopping-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ffe082;
+            background-color: #fff;
         }
 
         .shopping-card h4 {
@@ -267,20 +279,22 @@
             margin: 0;
             font-size: 0.9rem;
             color: #5d4037;
+            flex-grow: 1;
         }
 
         .shopping-card .buy-location {
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 0.8rem;
             background: #ffe082;
             color: #d84315;
-            padding: 3px 10px;
+            padding: 5px 12px;
             border-radius: 12px;
             font-weight: bold;
+            align-self: flex-start;
         }
 
-        /* --- 總結列表格 (V3樣式) --- */
+        /* --- 總結列表格 --- */
         .summary-section {
             margin-top: 30px;
             background: var(--glass);
@@ -403,7 +417,7 @@
 
         <button class="btn-map" onclick="toggleMap('map1')">🗺️ 顯示路線：機場 ➔ 樂高飯店</button>
         <div id="map1" class="map-container">
-            <iframe src="https://maps.google.com/maps?saddr=Chubu+Centrair+International+Airport&daddr=LEGOLAND+Japan+Hotel&output=embed" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/search/?api=1&query=LEGOLAND+Japan+Hotel" loading="lazy"></iframe>
         </div>
     </div>
 
@@ -484,14 +498,14 @@
 
         <button class="btn-map" onclick="toggleMap('map3')" style="background:#039be5;">🗺️ 顯示路線：萬豪 ➔ 港水族館</button>
         <div id="map3" class="map-container">
-            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Port+of+Nagoya+Public+Aquarium&output=embed" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/search/?api=1&query=Port+of+Nagoya+Public+Aquarium" loading="lazy"></iframe>
         </div>
 
         <div style="background:#e1f5fe; padding:15px; border-radius:10px; margin-top:15px; border:2px solid #b3e5fc;">
             <strong style="color:#0277bd;">🚕 給司機的轉場字卡：</strong>
             <p style="background:white; padding:10px; margin:5px 0; border-radius:5px; color:#555;">
                 大型タクシーを一台呼んでいただけますか？<br>
-                大人2名、子供1名、大型スーツケース3個あります。<br>
+                大人2名、子供1名、大型スーツケース2個、小型スーツケース1個あります。<br>
                 <strong>目的地：名古屋マリオットアソシアホテル (15F ロビー)</strong>
             </p>
         </div>
@@ -499,43 +513,67 @@
 
     <div class="day-card" style="border-left-color: #7cb342;">
         <div class="day-header">
-            <span class="day-title">4/02 (三) 吉卜力大倉庫</span>
-            <span class="day-tag" style="color:#7cb342;">宿：萬豪飯店</span>
+            <span class="day-title">4/02 (三) 吉卜力專車一日遊</span>
+            <span class="day-tag" style="background:#7cb342; color:white;">🚌 Klook 巴士團</span>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">08:30</span>
+                <span class="event-title">🚌 萬豪飯店 1F 集合出發</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">**超方便！** Klook 巴士的集合地點就在您入住的萬豪飯店 1 樓旅遊巴士區，搭電梯下樓就能上車。</div>
+                <div class="detail-point">隨團配有英文導遊，車上會發放專屬的「美味日式便當」，省去在園區內排隊買午餐的煩惱。</div>
+            </div>
         </div>
 
         <div class="timeline-item">
             <div class="timeline-header" onclick="toggleDetail(this)">
                 <span class="time">10:00</span>
-                <span class="event-title">🍃 吉卜力公園 (Ghibli Park)</span>
+                <span class="event-title">🍃 吉卜力公園 (三大熱門區)</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">**區域**：今日專攻「吉卜力大倉庫 (Ghibli's Grand Warehouse)」。</div>
-                <div class="detail-point">**親子必去**：「貓巴士室 (Cat Bus Room)」，這是專屬小朋友的軟墊遊戲區，大人不能進去玩喔！</div>
-                <div class="detail-point">**展覽**：名場面展 (可以跟無臉男拍照)，建議一入園先去排隊，人潮較少。</div>
+                <div class="detail-point">持團費包含的「O-Sanpo Day Pass Standard」可進入：吉卜力大倉庫、魔法故里、魔女之谷。</div>
+                <div class="detail-point">**親子必去**：大倉庫內的「貓巴士室 (Cat Bus Room)」軟墊遊戲區，是小孩放電天堂。</div>
+                <div class="detail-point">園區內走路較多，午餐可找個風景優美的地方享用車上發的便當。</div>
             </div>
         </div>
 
         <div class="timeline-item">
             <div class="timeline-header" onclick="toggleDetail(this)">
-                <span class="time">18:30</span>
-                <span class="event-title">🛍️ 名站周邊採買</span>
+                <span class="time">15:30</span>
+                <span class="event-title">🚗 豐田汽車博物館 (週三限定)</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">萬豪樓下即是「高島屋百貨」，對面是「Bic Camera」。</div>
-                <div class="detail-point">建議今日先買電器或大型藥妝，直接拿回飯店放。</div>
+                <div class="detail-point">吉卜力結束後搭乘原巴士前往博物館。因為今天是週三，所以安排參觀「豐田汽車博物館」。</div>
+                <div class="detail-point">導遊會分享吉卜力動畫中出現的汽車靈感，讓找車子變成有趣的尋寶遊戲。</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header" onclick="toggleDetail(this)">
+                <span class="time">18:00</span>
+                <span class="event-title">🛍️ 名站周邊採買 & 晚餐</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="event-details">
+                <div class="detail-point">巴士返回名古屋車站解散。直接上樓回房間放東西，超級順路。</div>
+                <div class="detail-point">傍晚可以去高島屋或 Bic Camera 買藥妝電器。</div>
             </div>
         </div>
 
         <div class="food-section">
-            <div class="food-item">🥪 午：園區輕食</div>
+            <div class="food-item">🍱 午：特製日式便當 (旅行團提供)</div>
             <div class="food-item">🍲 晚：山本屋味噌烏龍</div>
         </div>
 
         <button class="btn-map" onclick="toggleMap('map4')" style="background:#7cb342;">🗺️ 顯示路線：萬豪 ➔ 吉卜力</button>
         <div id="map4" class="map-container">
-            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Ghibli+Park,+Aichi&output=embed" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/search/?api=1&query=Ghibli+Park" loading="lazy"></iframe>
         </div>
     </div>
 
@@ -560,12 +598,21 @@
 
         <div class="timeline-item">
             <div class="timeline-header" onclick="toggleDetail(this)">
-                <span class="time">18:30</span>
-                <span class="event-title">🥩 敘敘苑燒肉 (最後一晚大餐)</span>
+                <span class="time">17:30</span>
+                <span class="event-title">🥩 敘敘苑 名古屋名站店 (已訂位)</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">位於 JR Central Towers 13F (萬豪樓下)。</div>
+                <div style="background:#e1f5fe; padding:15px; border-radius:10px; margin-bottom:15px; border-left:5px solid #039be5; font-size:0.95rem;">
+                    <strong style="color:#0277bd; font-size:1.1rem;">📝 訂位確認資訊</strong><br>
+                    <span style="display:inline-block; margin-top:5px;">
+                        • <strong>預訂日期：</strong>2026/04/03<br>
+                        • <strong>預訂時間：</strong>17:30<br>
+                        • <strong>預訂姓名：</strong>Hsieh PingHsun<br>
+                        • <strong>預訂人數：</strong>3 人
+                    </span>
+                </div>
+                <div class="detail-point">位於 Ｍ三ダイニングビル 9F (距離萬豪飯店步行約 5-8 分鐘)。</div>
                 <div class="detail-point">**必點**：上等牛五花、牛舌。</div>
                 <div class="detail-point">**親子貼心**：餐後會送愛心形狀的冰淇淋，小朋友會很開心！</div>
             </div>
@@ -578,7 +625,7 @@
 
         <button class="btn-map" onclick="toggleMap('map5')" style="background:#fb8c00;">🗺️ 顯示路線：萬豪 ➔ 名古屋城</button>
         <div id="map5" class="map-container">
-            <iframe src="https://maps.google.com/maps?saddr=Nagoya+Marriott+Associa+Hotel&daddr=Nagoya+Castle&output=embed" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/search/?api=1&query=Nagoya+Castle" loading="lazy"></iframe>
         </div>
     </div>
 
@@ -615,31 +662,37 @@
         <h2>🛍️ 名古屋必買購物指南 (伴手禮推薦)</h2>
         <div class="shopping-grid">
             <div class="shopping-card">
+                <img src="./images/shrimp_cookies.jpg" alt="蝦餅示意圖">
                 <h4>🦐 蝦餅 (坂角總本舖 ゆかり)</h4>
                 <p>長輩與小孩最愛！口感硬脆、鮮味濃郁。如果想找造型可愛的，可以買另一家「桂新堂」的蝦餅。</p>
                 <span class="buy-location">📍 萬豪樓下高島屋 B1 / 機場</span>
             </div>
             <div class="shopping-card">
+                <img src="./images/akafuku_8_cut-min.png" alt="赤福 Akafuku">
                 <h4>🍡 赤福 (Akafuku)</h4>
                 <p>綿密紅豆泥包裹著軟糯麻糬，甜而不膩。因保存期限只有短短幾天，強烈建議最後一天在機場購買。</p>
                 <span class="buy-location">📍 名古屋車站 Kiosk / 機場免稅店</span>
             </div>
             <div class="shopping-card">
+                <img src="./images/frog_cookies_.jpg" alt="和菓子示意圖">
                 <h4>🐸 青柳小青蛙饅頭</h4>
-                <p>名古屋超人氣和菓子「青柳總本家」出品，青蛙造型超級可愛，內餡是紅豆沙，4歲小朋友一定會喜歡！</p>
+                <p>名古屋超人氣和菓子「青柳總本家」出品，青蛙造型超級可愛，內餡是紅豆沙，小朋友一定會喜歡！</p>
                 <span class="buy-location">📍 名古屋車站內伴手禮店 / 高島屋</span>
             </div>
             <div class="shopping-card">
+                <img src="./images/redbean.jpg" alt="小倉紅豆吐司">
                 <h4>🍞 小倉紅豆吐司抹醬</h4>
                 <p>把名古屋特有的「紅豆吐司」早餐帶回台灣！買一罐紅豆抹醬，回台灣烤厚片吐司加上奶油，完美還原。</p>
                 <span class="buy-location">📍 名站超市 / 伴手禮土產店</span>
             </div>
             <div class="shopping-card">
+                <img src="./images/noodies.jpg" alt="味仙 台灣拉麵">
                 <h4>🍜 味仙 台灣拉麵 (泡麵版)</h4>
                 <p>名古屋特產「台灣拉麵」其實台灣吃不到！買幾包微辣帶勁的即食麵回台灣當宵夜非常過癮。</p>
                 <span class="buy-location">📍 名站內便利商店 / 機場</span>
             </div>
             <div class="shopping-card">
+                <img src="./images/chicken_wgins.png" alt="手羽先 點心">
                 <h4>🍗 世界之山將 / 風來坊 點心</h4>
                 <p>除了現場吃雞翅，他們也有出「手羽先口味」的洋芋片或米果，鹹香重口味，非常適合買回台灣當下酒菜。</p>
                 <span class="buy-location">📍 機場 / 名古屋車站</span>
@@ -661,47 +714,47 @@
                 <tr>
                     <td>🏨 飯店</td>
                     <td>樂高樂園飯店</td>
-                    <td><a href="https://maps.app.goo.gl/BvqD324QpD59HCHH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=LEGOLAND+Japan+Hotel" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🏨 飯店</td>
                     <td>名古屋萬豪飯店</td>
-                    <td><a href="https://maps.app.goo.gl/YqS1z7v1Lp13J3wK9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Marriott+Associa+Hotel" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>磁浮鐵道館</td>
-                    <td><a href="https://maps.app.goo.gl/uQ7k145H7g9yHqZq7" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=SCMAGLEV+and+Railway+Park" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>名古屋港水族館</td>
-                    <td><a href="https://maps.app.goo.gl/GZ5D7e3D7D2Q31mLA" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=Port+of+Nagoya+Public+Aquarium" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                  <tr>
                     <td>🎡 景點</td>
                     <td>吉卜力公園</td>
-                    <td><a href="https://maps.app.goo.gl/X9L2Q3k4Y1N5pQW69" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=Ghibli+Park" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>名古屋城</td>
-                    <td><a href="https://maps.app.goo.gl/V11L4Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Castle" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🍱 餐廳</td>
                     <td>矢場味噌豬排 (Maker's Pier店)</td>
-                    <td><a href="https://maps.app.goo.gl/F6Q8S7H3L2X1v9cZ6" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=矢場とん+名古屋メーカーズピア店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                  <tr>
                     <td>🍱 餐廳</td>
                     <td>備長鰻魚飯 (JR Gate Tower)</td>
-                    <td><a href="https://maps.app.goo.gl/N9L8Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=ひつまぶし備長+ゲートタワープラザ店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🍱 餐廳</td>
-                    <td>敘敘苑燒肉 (JR Central Towers)</td>
-                    <td><a href="https://maps.app.goo.gl/M8L8Q3P3R6W2eS68" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td>敘敘苑 名古屋名站店 (Ｍ三ダイニングビル 9F)</td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=叙々苑+名古屋名駅店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
             </tbody>
         </table>
