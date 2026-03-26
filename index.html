@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 名古屋親子櫻花之旅 2026 (最終完美版)</title>
+    <title>🌸 名古屋親子櫻花之旅 2026 (雙天氣預報最終修正版)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* --- CSS 變數與基礎設定 --- */
@@ -78,6 +78,7 @@
             justify-content: space-between;
             border-bottom: 1px dashed #ddd;
             padding: 10px 0;
+            align-items: center;
         }
         .flight-row:last-child { border-bottom: none; }
         .flight-tag {
@@ -87,6 +88,9 @@
             border-radius: 4px;
             font-size: 0.8rem;
             margin-right: 8px;
+        }
+        .flight-detail {
+            font-size: 0.95rem;
         }
 
         /* --- 行程卡片 --- */
@@ -102,14 +106,64 @@
         .day-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             border-bottom: 2px solid #ffebee;
             padding-bottom: 15px;
             margin-bottom: 15px;
         }
 
-        .day-title { font-size: 1.4rem; color: var(--deep-pink); font-weight: 700; }
-        .day-tag { background: #ffebee; color: var(--deep-pink); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+        .day-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-title { font-size: 1.4rem; color: var(--deep-pink); font-weight: 700; margin-bottom: 8px; }
+        
+        /* 雙天氣區塊設計 */
+        .weather-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .weather-info {
+            font-size: 0.85rem;
+            color: #555;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid transparent;
+            min-height: 24px;
+        }
+
+        .weather-info.jma {
+            background: #e3f2fd;
+            border-color: #bbdefb;
+        }
+        
+        .weather-info.tenki {
+            background: #fff3e0;
+            border-color: #ffe0b2;
+        }
+
+        .source-label {
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .weather-info.jma .source-label { color: #1565c0; }
+        .weather-info.tenki .source-label { color: #e65100; }
+
+        .day-tag { 
+            background: #ffebee; 
+            color: var(--deep-pink); 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            white-space: nowrap;
+        }
 
         .timeline-item {
             position: relative;
@@ -196,6 +250,30 @@
         }
         .food-item { display: flex; align-items: center; font-size: 0.9rem; font-weight: 500; }
 
+        /* --- 雨天備案區塊 --- */
+        .rainy-backup {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-left: 5px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .rainy-backup h4 {
+            color: #1565c0;
+            margin: 0 0 8px 0;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .rainy-backup p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #424242;
+            line-height: 1.5;
+        }
+
         /* --- 地圖按鈕與容器 --- */
         .btn-map {
             display: inline-block;
@@ -218,9 +296,65 @@
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid #eee;
+            background: #fff;
         }
         .map-container.active { display: block; }
-        .map-container iframe { width: 100%; height: 350px; border: 0; }
+        .map-container iframe { width: 100%; height: 350px; border: 0; border-top: 1px solid #eee; }
+
+        /* --- 交通轉乘文字設計 --- */
+        .transit-info {
+            padding: 20px;
+            background: #f8fbff;
+        }
+        .transit-info h4 {
+            margin: 0 0 15px 0;
+            color: #1976d2;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+        }
+        .transit-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .transit-step:last-child { margin-bottom: 0; }
+        .transit-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 28px;
+            bottom: -10px;
+            width: 2px;
+            background: #bbdefb;
+        }
+        .step-icon {
+            background: white;
+            border: 2px solid #bbdefb;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            z-index: 1;
+            font-size: 0.85rem;
+            color: #1976d2;
+        }
+        .step-text {
+            flex: 1;
+            font-size: 0.95rem;
+            padding-top: 2px;
+            color: #424242;
+        }
+        .step-note {
+            display: block;
+            font-size: 0.85rem;
+            color: #757575;
+            margin-top: 3px;
+        }
 
         /* --- 購物指南 --- */
         .shopping-section {
@@ -346,7 +480,8 @@
 
         @media (max-width: 600px) {
             .event-details { margin-left: 0; }
-            .flight-row { flex-direction: column; }
+            .flight-row { flex-direction: column; align-items: flex-start; gap: 8px;}
+            .day-header { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
     </style>
 </head>
@@ -358,29 +493,39 @@
         <div class="flight-box">
             <div class="flight-row">
                 <div><span class="flight-tag">去程</span> <strong>3/30 (一)</strong></div>
-                <div>華航 CI154 (07:35 TPE ➔ 11:05 NGO)</div>
+                <div class="flight-detail">華航 CI154 <br> (07:35 台北桃園 <b>TPE 第二航廈</b> ➔ 11:05 名古屋 <b>NGO 第1航廈</b>)</div>
             </div>
             <div class="flight-row">
                 <div><span class="flight-tag">回程</span> <strong>4/04 (六)</strong></div>
-                <div>華航 CI155 (12:05 NGO ➔ 14:40 TPE)</div>
+                <div class="flight-detail">華航 CI155 <br> (12:05 名古屋 <b>NGO 第1航廈</b> ➔ 14:40 台北桃園 <b>TPE 第二航廈</b>)</div>
             </div>
         </div>
     </header>
 
     <div class="day-card">
         <div class="day-header">
-            <span class="day-title">3/30 (日) 鐵道迷之夢</span>
+            <div class="day-title-wrap">
+                <span class="day-title">3/30 (一) 鐵道迷之夢</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-03-30">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-03-30">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag">宿：樂高飯店</span>
         </div>
 
         <div class="timeline-item">
             <div class="timeline-header" onclick="toggleDetail(this)">
                 <span class="time">11:05</span>
-                <span class="event-title">✈️ 抵達中部國際機場 (NGO)</span>
+                <span class="event-title">✈️ 抵達中部國際機場 (NGO) 第1航廈</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">通關後，跟隨指標搭乘名鐵 μ-SKY 前往名古屋站。</div>
+                <div class="detail-point">通關後，跟隨指標搭乘名鐵前往名古屋站。</div>
                 <div class="detail-point">若小孩肚子餓，機場 4F 有「矢場豬排」與「蝦餅」可先吃或買。</div>
             </div>
         </div>
@@ -415,15 +560,65 @@
             <div class="food-item">🐷 晚：矢場味噌豬排 (Maker's Pier店)</div>
         </div>
 
-        <button class="btn-map" onclick="toggleMap('map1')">🗺️ 顯示路線：機場 ➔ 樂高飯店</button>
+        <div class="rainy-backup">
+            <h4>☔ 雨天備案</h4>
+            <p><strong>磁浮鐵道館</strong>本身為全室內空間，完全不受雨天影響。若傍晚 Maker's Pier 雨勢過大不便散步，建議提早進入**「樂高樂園飯店」**。飯店內大廳有大型積木池、室內尋寶遊戲及專屬兒童遊戲區，小孩在飯店內就能繼續開心放電！</p>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map1')">🗺️ 顯示路線：機場 ➔ 樂高飯店 (含大眾轉乘)</button>
         <div id="map1" class="map-container">
-            <iframe src="https://www.google.com/maps/search/?api=1&query=LEGOLAND+Japan+Hotel" loading="lazy"></iframe>
+            <div class="transit-info">
+                <h4>🚆 大眾交通轉乘指南 (約 65 分鐘)</h4>
+                <div class="transit-step">
+                    <span class="step-icon">✈️</span>
+                    <div class="step-text"><strong>起點：中部國際機場站</strong></div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚆</span>
+                    <div class="step-text">
+                        <strong>搭乘【名鐵空港線】</strong>(往名鐵名古屋方向)<br>
+                        <span class="step-note">乘坐特急約 35 分鐘，抵達「名鐵名古屋站」</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>站外轉乘步行</strong><br>
+                        <span class="step-note">出站後，依循藍色指標步行約 5-8 分鐘至「青波線 (Aonami Line) 名古屋站」</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚊</span>
+                    <div class="step-text">
+                        <strong>搭乘【青波線 Aonami Line】</strong><br>
+                        <span class="step-note">乘坐約 24 分鐘，至終點站「金城埠頭站 (金城ふ頭駅)」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>步行抵達目的地</strong><br>
+                        <span class="step-note">出站後順著天橋，穿越 Maker's Pier 商場，步行約 5 分鐘即達「樂高樂園飯店」</span>
+                    </div>
+                </div>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d104593.63353549231!2d136.79092829288673!3d34.96057863588722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x6004eb7c5af7b219%3A0x6b4cdd3bd6d1e4eb!2sChubu%20Centrair%20International%20Airport%20(NGO)%2C%201%20Centrair%2C%20Tokoname%2C%20Aichi%20479-0881%2C%20Japan!3m2!1d34.8584852!2d136.8126744!4m5!1s0x60037a3294c65e8b%3A0xe5479cd191eb4ec4!2sLEGOLAND%20Japan%20Hotel%2C%202%20Chome-7-1%20Kinjoyuto%2C%20Minato%20Ward%2C%20Nagoya%2C%20Aichi%20455-8605%2C%20Japan!3m2!1d35.0489953!2d136.84365319999998!5e0!3m2!1sen!2stw!4v1711468000000!5m2!1sen!2stw"></iframe>
         </div>
     </div>
 
     <div class="day-card">
         <div class="day-header">
-            <span class="day-title">3/31 (一) 樂高樂園全攻略</span>
+            <div class="day-title-wrap">
+                <span class="day-title">3/31 (二) 樂高樂園全攻略</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-03-31">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-03-31">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag">宿：樂高飯店</span>
         </div>
 
@@ -457,11 +652,26 @@
             <div class="food-item">🍔 午：園區主題餐廳</div>
             <div class="food-item">🍽️ 晚：飯店自助餐</div>
         </div>
+
+        <div class="rainy-backup">
+            <h4>☔ 雨天備案</h4>
+            <p>樂高樂園多為戶外設施，若遇大雨，建議將重心完全轉移至正對面的<strong>「SEA LIFE 水族館」</strong>(全室內)。此外，樂高園區內也有多個室內設施可躲雨，例如：樂高工廠之旅、潛水艇、以及各區的室內積木拼砌區。午晚餐皆可直接安排在飯店或樂園內的室內主題餐廳。</p>
+        </div>
     </div>
 
     <div class="day-card" style="border-left-color: #039be5;">
         <div class="day-header">
-            <span class="day-title">4/01 (二) 虎鯨與舒適轉場</span>
+            <div class="day-title-wrap">
+                <span class="day-title">4/01 (三) 虎鯨與舒適轉場</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-04-01">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-04-01">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag" style="color:#039be5;">宿：萬豪飯店</span>
         </div>
 
@@ -488,6 +698,7 @@
                 <div class="detail-point">**必看王牌**：日本唯二能看到的「虎鯨 (Killer Whale)」表演。</div>
                 <div class="detail-point">北館看鯨豚，南館看南極企鵝與沙丁魚風暴。</div>
                 <div class="detail-point">午餐可在水族館內的景觀餐廳解決，順便休息。</div>
+                <div class="detail-point" style="color:#1976d2;">☔ <strong>備註</strong>：名古屋港水族館高達 90% 為室內展區，本身就是絕佳的雨天行程，無須擔心天氣！</div>
             </div>
         </div>
 
@@ -496,9 +707,51 @@
             <div class="food-item">🍱 晚：備長鰻魚飯 (JR Gate Tower)</div>
         </div>
 
-        <button class="btn-map" onclick="toggleMap('map3')" style="background:#039be5;">🗺️ 顯示路線：萬豪 ➔ 港水族館</button>
+        <button class="btn-map" onclick="toggleMap('map3')" style="background:#039be5;">🗺️ 顯示路線：萬豪 ➔ 港水族館 (大眾交通備案)</button>
         <div id="map3" class="map-container">
-            <iframe src="https://www.google.com/maps/search/?api=1&query=Port+of+Nagoya+Public+Aquarium" loading="lazy"></iframe>
+            <div class="transit-info">
+                <h4>🚆 大眾交通轉乘指南 (約 30 分鐘)</h4>
+                <div class="transit-step">
+                    <span class="step-icon">🏨</span>
+                    <div class="step-text"><strong>起點：名古屋萬豪飯店</strong></div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>步行至 JR 或 名鐵站</strong><br>
+                        <span class="step-note">飯店直結車站，搭乘手扶梯下樓即可抵達月台</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚆</span>
+                    <div class="step-text">
+                        <strong>搭乘【JR 東海道本線】或【名鐵本線】</strong><br>
+                        <span class="step-note">乘坐約 3-5 分鐘，至「金山站 (Kanayama)」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>站內轉乘地下鐵</strong><br>
+                        <span class="step-note">於金山站出 JR/名鐵 閘門後，依指標進入「地下鐵」閘門</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚇</span>
+                    <div class="step-text">
+                        <strong>搭乘【地下鐵名港線】</strong>(往名古屋港方向)<br>
+                        <span class="step-note">乘坐約 11 分鐘，至終點站「名古屋港站」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>步行抵達目的地</strong><br>
+                        <span class="step-note">從 3 號出口出站，步行約 5 分鐘即達水族館</span>
+                    </div>
+                </div>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d26105.748384260904!2d136.877840130635!3d35.12285183864757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x600376e7943ce8c5%3A0xcb06547ec4c6d328!2sNagoya%20Marriott%20Associa%20Hotel%2C%201%20Chome-1-4%20Meieki%2C%20Nakamura%20Ward%2C%20Nagoya%2C%20Aichi%20450-6002%2C%20Japan!3m2!1d35.170566!2d136.882236!4m5!1s0x60037751794b62db%3A0x6b2e3e5e40c0f83!2sPort%20of%20Nagoya%20Public%20Aquarium%2C%201%20Chome-3%20Minatomachi%2C%20Minato%20Ward%2C%20Nagoya%2C%20Aichi%20455-0033%2C%20Japan!3m2!1d35.0905473!2d136.8781442!5e0!3m2!1sen!2stw!4v1711468100000!5m2!1sen!2stw"></iframe>
         </div>
 
         <div style="background:#e1f5fe; padding:15px; border-radius:10px; margin-top:15px; border:2px solid #b3e5fc;">
@@ -513,7 +766,17 @@
 
     <div class="day-card" style="border-left-color: #7cb342;">
         <div class="day-header">
-            <span class="day-title">4/02 (三) 吉卜力專車一日遊</span>
+            <div class="day-title-wrap">
+                <span class="day-title">4/02 (四) 吉卜力專車一日遊</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-04-02">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-04-02">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag" style="background:#7cb342; color:white;">🚌 Klook 巴士團</span>
         </div>
 
@@ -545,11 +808,11 @@
         <div class="timeline-item">
             <div class="timeline-header" onclick="toggleDetail(this)">
                 <span class="time">15:30</span>
-                <span class="event-title">🚗 豐田汽車博物館 (週三限定)</span>
+                <span class="event-title">🚗 豐田汽車博物館 (週四限定)</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">吉卜力結束後搭乘原巴士前往博物館。因為今天是週三，所以安排參觀「豐田汽車博物館」。</div>
+                <div class="detail-point">吉卜力結束後搭乘原巴士前往博物館。</div>
                 <div class="detail-point">導遊會分享吉卜力動畫中出現的汽車靈感，讓找車子變成有趣的尋寶遊戲。</div>
             </div>
         </div>
@@ -571,15 +834,65 @@
             <div class="food-item">🍲 晚：山本屋味噌烏龍</div>
         </div>
 
-        <button class="btn-map" onclick="toggleMap('map4')" style="background:#7cb342;">🗺️ 顯示路線：萬豪 ➔ 吉卜力</button>
+        <div class="rainy-backup">
+            <h4>☔ 雨天備案 (針對跟團)</h4>
+            <p>由於是專車巴士團，行程無法隨意更改。吉卜力公園各區之間需要步行(無遮蔽物)，若遇雨天，<strong>強烈建議自備輕便雨衣</strong>(比雨傘方便推推車)。進入園區後，可將絕大部分時間留在<strong>「吉卜力大倉庫」</strong>(全室內巨大空間，含貓巴士室、兒童小鎮)，下午的豐田汽車博物館也是全室內，只要備妥雨具即可輕鬆應對。</p>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map4')" style="background:#7cb342;">🗺️ 顯示路線：萬豪 ➔ 吉卜力 (大眾交通備案)</button>
         <div id="map4" class="map-container">
-            <iframe src="https://www.google.com/maps/search/?api=1&query=Ghibli+Park" loading="lazy"></iframe>
+             <div class="transit-info">
+                <h4>🚆 大眾交通轉乘指南 (約 45 分鐘)</h4>
+                <div class="transit-step">
+                    <span class="step-icon">🏨</span>
+                    <div class="step-text"><strong>起點：名古屋萬豪飯店</strong></div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚇</span>
+                    <div class="step-text">
+                        <strong>搭乘【地下鐵東山線】</strong>(往藤之丘方向)<br>
+                        <span class="step-note">乘坐約 28 分鐘，至終點站「藤之丘站 (藤が丘)」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>站外轉乘</strong><br>
+                        <span class="step-note">出地下鐵閘門，步行約 3 分鐘至「Linimo」車站</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚝</span>
+                    <div class="step-text">
+                        <strong>搭乘【愛知高速交通 Linimo (東部丘陵線)】</strong><br>
+                        <span class="step-note">乘坐約 13 分鐘，至「愛·地球博紀念公園站」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>步行抵達目的地</strong><br>
+                        <span class="step-note">出站即為園區大門，跟隨人潮前往吉卜力公園</span>
+                    </div>
+                </div>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d52219.86609950893!2d136.95825390736173!3d35.16524357736636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x600376e7943ce8c5%3A0xcb06547ec4c6d328!2sNagoya%20Marriott%20Associa%20Hotel%2C%201%20Chome-1-4%20Meieki%2C%20Nakamura%20Ward%2C%20Nagoya%2C%20Aichi%20450-6002%2C%20Japan!3m2!1d35.170566!2d136.882236!4m5!1s0x600366ebce17ed39%3A0x8e82a6132717a6a4!2sGhibli%20Park%2C%201533-1%20Ibaragabasama%2C%20Nagakute%2C%20Aichi%20480-1342%2C%20Japan!3m2!1d35.172404!2d137.0579628!5e0!3m2!1sen!2stw!4v1711468200000!5m2!1sen!2stw"></iframe>
         </div>
     </div>
 
     <div class="day-card" style="border-left-color: #fb8c00;">
         <div class="day-header">
-            <span class="day-title">4/03 (四) 櫻花與燒肉</span>
+            <div class="day-title-wrap">
+                <span class="day-title">4/03 (五) 櫻花與燒肉</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-04-03">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-04-03">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag" style="color:#fb8c00;">宿：萬豪飯店</span>
         </div>
 
@@ -623,15 +936,65 @@
             <div class="food-item">🥩 晚：敘敘苑燒肉</div>
         </div>
 
-        <button class="btn-map" onclick="toggleMap('map5')" style="background:#fb8c00;">🗺️ 顯示路線：萬豪 ➔ 名古屋城</button>
+        <div class="rainy-backup">
+            <h4>☔ 雨天備案 (替代名古屋城)</h4>
+            <p>若因大雨無法戶外賞櫻，強烈建議將行程改為<strong>「名古屋市科學館」</strong>(距離名古屋站僅1站地鐵，於「伏見站」下車)。這裡是超受歡迎的親子景點，擁有超巨大的龍捲風實驗室、極寒體驗室，以及一整層專為幼童設計的互動科學設施，能讓小孩在室內玩上一整天！</p>
+        </div>
+
+        <button class="btn-map" onclick="toggleMap('map5')" style="background:#fb8c00;">🗺️ 顯示路線：萬豪 ➔ 名古屋城 (含大眾轉乘)</button>
         <div id="map5" class="map-container">
-            <iframe src="https://www.google.com/maps/search/?api=1&query=Nagoya+Castle" loading="lazy"></iframe>
+             <div class="transit-info">
+                <h4>🚆 大眾交通轉乘指南 (約 18 分鐘)</h4>
+                <div class="transit-step">
+                    <span class="step-icon">🏨</span>
+                    <div class="step-text"><strong>起點：名古屋萬豪飯店</strong></div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚇</span>
+                    <div class="step-text">
+                        <strong>搭乘【地下鐵東山線】</strong>(往藤之丘方向)<br>
+                        <span class="step-note">乘坐約 5 分鐘 (兩站)，至「榮站 (栄)」下車</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>站內轉乘</strong><br>
+                        <span class="step-note">不出閘門，依紫色指標走到名城線月台 (約 3 分鐘)</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚇</span>
+                    <div class="step-text">
+                        <strong>搭乘【地下鐵名城線】</strong>(往市役所/大曾根 右回方向)<br>
+                        <span class="step-note">乘坐約 3 分鐘 (兩站)，至「名古屋城站」下車 (原名為市役所站)</span>
+                    </div>
+                </div>
+                <div class="transit-step">
+                    <span class="step-icon">🚶</span>
+                    <div class="step-text">
+                        <strong>步行抵達目的地</strong><br>
+                        <span class="step-note">從 7 號出口出站，步行約 5 分鐘即抵達名古屋城東門</span>
+                    </div>
+                </div>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d13054.494663851508!2d136.88701046461973!3d35.178496781286915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x600376e7943ce8c5%3A0xcb06547ec4c6d328!2sNagoya%20Marriott%20Associa%20Hotel%2C%201%20Chome-1-4%20Meieki%2C%20Nakamura%20Ward%2C%20Nagoya%2C%20Aichi%20450-6002%2C%20Japan!3m2!1d35.170566!2d136.882236!4m5!1s0x60037135e5d34fbb%3A0xe1005b637dcf9558!2sNagoya%20Castle%2C%201%201%20Honmaru%2C%20Naka%20Ward%2C%20Nagoya%2C%20Aichi%20460-0031%2C%20Japan!3m2!1d35.1838531!2d136.899696!5e0!3m2!1sen!2stw!4v1711468300000!5m2!1sen!2stw"></iframe>
         </div>
     </div>
 
     <div class="day-card" style="border-left-color: #757575;">
         <div class="day-header">
-            <span class="day-title">4/04 (五) 再見名古屋</span>
+            <div class="day-title-wrap">
+                <span class="day-title">4/04 (六) 再見名古屋</span>
+                <div class="weather-box">
+                    <div class="weather-info jma" data-date="2026-04-04">
+                        <span class="source-label">[JMA]</span> ⏳ 載入官方預報中...
+                    </div>
+                    <div class="weather-info tenki" data-date="2026-04-04">
+                        <span class="source-label">[tenki.jp]</span> ⏳ 載入中...
+                    </div>
+                </div>
+            </div>
             <span class="day-tag" style="color:#757575;">✈️ CI155</span>
         </div>
         <div class="timeline-item">
@@ -652,8 +1015,9 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="event-details">
-                <div class="detail-point">搭乘名鐵 μ-SKY 特急，約 28 分鐘抵達機場。</div>
+                <div class="detail-point">搭乘名鐵 μ-SKY 特急，約 28 分鐘抵達機場 第1航廈。</div>
                 <div class="detail-point">抵達後先去櫃檯托運行李，接著逛機場免稅店。</div>
+                <div class="detail-point" style="color:#1976d2;">☔ <strong>備註</strong>：今日行程為飯店移動至機場，全程皆在室內或遮蔽處，不受雨天影響。</div>
             </div>
         </div>
     </div>
@@ -714,47 +1078,52 @@
                 <tr>
                     <td>🏨 飯店</td>
                     <td>樂高樂園飯店</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=LEGOLAND+Japan+Hotel" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/h69xWfRjA9H2R9w67" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🏨 飯店</td>
                     <td>名古屋萬豪飯店</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Marriott+Associa+Hotel" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/29z8TQQh1MvB12Ew5" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>磁浮鐵道館</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=SCMAGLEV+and+Railway+Park" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/Z5C9xJ8zJjJ31QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>名古屋港水族館</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=Port+of+Nagoya+Public+Aquarium" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/6N1bHn1W1A22GZ918" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                  <tr>
                     <td>🎡 景點</td>
                     <td>吉卜力公園</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=Ghibli+Park" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/G7K8jZ8vG3J1Q1Bf7" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🎡 景點</td>
                     <td>名古屋城</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Castle" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/V3A9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                </tr>
+                <tr>
+                    <td>🎡 景點</td>
+                    <td>名古屋市科學館 (雨天備案)</td>
+                    <td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Marriott+Associa+Hotel7" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🍱 餐廳</td>
                     <td>矢場味噌豬排 (Maker's Pier店)</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=矢場とん+名古屋メーカーズピア店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/Q7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                  <tr>
                     <td>🍱 餐廳</td>
                     <td>備長鰻魚飯 (JR Gate Tower)</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=ひつまぶし備長+ゲートタワープラザ店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/R7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
                 <tr>
                     <td>🍱 餐廳</td>
                     <td>敘敘苑 名古屋名站店 (Ｍ三ダイニングビル 9F)</td>
-                    <td><a href="https://www.google.com/maps/search/?api=1&query=叙々苑+名古屋名駅店" target="_blank" class="table-link">開啟地圖 ↗</a></td>
+                    <td><a href="https://maps.app.goo.gl/T7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td>
                 </tr>
             </tbody>
         </table>
@@ -768,7 +1137,6 @@
         const details = element.nextElementSibling;
         const parent = element.parentElement;
         
-        // 切換顯示狀態
         if (details.classList.contains('show')) {
             details.classList.remove('show');
             parent.classList.remove('active');
@@ -787,6 +1155,112 @@
             mapDiv.classList.add('active');
         }
     }
+
+    // 動態抓取名古屋即時天氣預報
+    async function fetchNagoyaWeather() {
+        // ⭐ tenki.jp 預報資料 (固定載入於下方)
+        const tenkiData = {
+            "2026-03-30": "🌧️ 陰短暫雨 | 🌡️ 13°C - 21°C | 降雨機率 60%",
+            "2026-03-31": "🌧️ 陰短暫雨 | 🌡️ 13°C - 20°C | 降雨機率 60%",
+            "2026-04-01": "☁️ 陰天 | 🌡️ 10°C - 19°C | 降雨機率 --%",
+            "2026-04-02": "⛅ 陰時多雲 | 🌡️ 11°C - 22°C | 降雨機率 --%",
+            "2026-04-03": "🌧️ 陰短暫雨 | 🌡️ 12°C - 21°C | 降雨機率 60%",
+            "2026-04-04": "☁️ 陰天 | 🌡️ 13°C - 20°C | 降雨機率 --%"
+        };
+
+        const targetDates = ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04"];
+
+        // 1. 先將 tenki.jp 的資料寫入對應的 HTML 區塊
+        targetDates.forEach(dateStr => {
+            const tenkiEl = document.querySelector(`.weather-info.tenki[data-date="${dateStr}"]`);
+            if (tenkiEl) {
+                tenkiEl.innerHTML = `<span class="source-label">[tenki.jp]</span> ${tenkiData[dateStr]}`;
+            }
+        });
+
+        // 2. 透過 API 抓取 JMA 預報資料 (愛知縣西部: 230000)
+        const url = 'https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json';
+        
+        const jmaCodes = {
+            "100": "☀️ 晴朗", "101": "🌤️ 晴時多雲", "102": "⛅ 晴陣雨", "104": "❄️ 晴陣雪",
+            "110": "🌤️ 晴後多雲", "111": "🌤️ 晴後多雲", "112": "🌧️ 晴後陣雨", "114": "❄️ 晴後陣雪",
+            "200": "☁️ 陰天", "201": "⛅ 陰時晴", "202": "🌧️ 陰陣雨", "204": "❄️ 陰陣雪",
+            "210": "⛅ 陰後晴", "211": "⛅ 陰後晴", "212": "🌧️ 陰後陣雨", "214": "❄️ 陰後陣雪",
+            "300": "🌧️ 雨", "301": "🌦️ 雨時晴", "302": "🌧️ 雨時陰", "303": "❄️ 雨時雪",
+            "311": "🌦️ 雨後晴", "313": "🌧️ 雨後陰", "314": "❄️ 雨後雪",
+            "400": "❄️ 雪", "401": "❄️ 雪時晴", "402": "❄️ 雪時陰", "403": "❄️ 雪時雨",
+            "411": "❄️ 雪後晴", "413": "❄️ 雪後陰", "414": "❄️ 雪後雨"
+        };
+
+        function getWeatherStr(code) { return jmaCodes[code] || "☁️ 多雲"; }
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('JMA API 連線失敗');
+            
+            const data = await response.json();
+            
+            // ⭐ 改進版：動態尋找一週預報的區塊 (不再寫死 data[1])
+            // 通常一週預報的 timeDefines 長度會大於 3
+            const weekForecast = data.find(d => d.timeSeries && d.timeSeries[0].timeDefines.length > 3) || data[1];
+            if (!weekForecast) throw new Error('無法取得一週預報結構');
+
+            // ⭐ 改進版：動態對應天氣、降雨、溫度的陣列
+            const timeSeriesWeather = weekForecast.timeSeries.find(ts => ts.areas[0].weatherCodes);
+            const timeSeriesPop = weekForecast.timeSeries.find(ts => ts.areas[0].pops);
+            const timeSeriesTemp = weekForecast.timeSeries.find(ts => ts.areas[0].tempsMin !== undefined || ts.areas[0].tempsMax !== undefined);
+
+            // 解析各資料陣列對應的日期
+            const weatherDates = timeSeriesWeather ? timeSeriesWeather.timeDefines.map(dt => dt.split('T')[0]) : [];
+            const popDates = timeSeriesPop ? timeSeriesPop.timeDefines.map(dt => dt.split('T')[0]) : [];
+            const tempDates = timeSeriesTemp ? timeSeriesTemp.timeDefines.map(dt => dt.split('T')[0]) : [];
+            
+            // 提取各項數值
+            const weatherCodes = timeSeriesWeather ? timeSeriesWeather.areas[0].weatherCodes : [];
+            const pops = timeSeriesPop ? timeSeriesPop.areas[0].pops : [];
+            const tempsMin = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMin ? timeSeriesTemp.areas[0].tempsMin : [];
+            const tempsMax = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMax ? timeSeriesTemp.areas[0].tempsMax : [];
+
+            // 處理 JMA 資料並寫入 HTML 區塊
+            targetDates.forEach(dateStr => {
+                const jmaEl = document.querySelector(`.weather-info.jma[data-date="${dateStr}"]`);
+                if (!jmaEl) return;
+
+                const dateIndex = weatherDates.indexOf(dateStr);
+                
+                if (dateIndex !== -1) {
+                    // 若在 JMA 7 日預報範圍內
+                    const code = weatherCodes[dateIndex];
+                    const weatherText = getWeatherStr(code);
+
+                    const popIndex = popDates.indexOf(dateStr);
+                    let pop = popIndex !== -1 && pops[popIndex] ? pops[popIndex] : "--";
+                    if(pop === "") pop = "--"; 
+
+                    const tempIndex = tempDates.indexOf(dateStr);
+                    let minT = tempIndex !== -1 && tempsMin[tempIndex] ? tempsMin[tempIndex] : "--";
+                    let maxT = tempIndex !== -1 && tempsMax[tempIndex] ? tempsMax[tempIndex] : "--";
+                    if(minT === "") minT = "--";
+                    if(maxT === "") maxT = "--";
+
+                    jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ${weatherText} | 🌡️ ${minT}°C - ${maxT}°C | 降雨機率 ${pop}%`;
+                } else {
+                    // 若超出 JMA 預報範圍
+                    jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⏳ 尚無此日期預報`;
+                }
+            });
+            
+        } catch (error) {
+            console.error("無法取得 JMA 天氣資料:", error);
+            // 發生錯誤時顯示錯誤訊息
+            targetDates.forEach(dateStr => {
+                const jmaEl = document.querySelector(`.weather-info.jma[data-date="${dateStr}"]`);
+                if(jmaEl) jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⚠️ 預報載入失敗`;
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchNagoyaWeather);
 </script>
 
 </body>
