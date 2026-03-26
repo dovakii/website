@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 名古屋親子櫻花之旅 2026</title>
+    <title>🌸 名古屋親子櫻花之旅 2026 (即時同步版)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    
     <style>
         /* --- CSS 變數與基礎設定 --- */
         :root {
@@ -26,168 +29,76 @@
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-        }
+        .container { max-width: 950px; margin: 0 auto; }
 
         /* --- Header --- */
         header {
-            text-align: center;
-            padding: 40px 20px;
+            text-align: center; padding: 40px 20px;
             background: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-            border-radius: 25px;
-            color: white;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
+            border-radius: 25px; color: white; box-shadow: var(--shadow); margin-bottom: 30px; position: relative; overflow: hidden;
         }
-
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 0;
-        }
-
-        header h1 {
-            position: relative;
-            z-index: 1;
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
+        header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 0; }
+        header h1 { position: relative; z-index: 1; font-size: 2.2rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 
         /* --- 航班資訊 --- */
         .flight-box {
-            position: relative;
-            z-index: 1;
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-            color: #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative; z-index: 1; background: rgba(255,255,255,0.95);
+            border-radius: 15px; padding: 15px; max-width: 800px; margin: 0 auto; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
-        .flight-row {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed #ddd;
-            padding: 10px 0;
-            align-items: center;
-        }
+        .flight-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #ddd; padding: 10px 0; align-items: center; }
         .flight-row:last-child { border-bottom: none; }
-        .flight-tag {
-            background: var(--deep-pink);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-right: 8px;
-        }
+        .flight-tag { background: var(--deep-pink); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 8px; }
         .flight-detail { font-size: 0.95rem; }
 
         /* --- 行程卡片 --- */
         .day-card {
-            background: var(--glass);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-left: 6px solid var(--deep-pink);
-            box-shadow: var(--shadow);
+            background: var(--glass); border-radius: 20px; padding: 25px; margin-bottom: 25px;
+            border-left: 6px solid var(--deep-pink); box-shadow: var(--shadow);
         }
-
-        .day-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 2px solid #ffebee;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
+        .day-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #ffebee; padding-bottom: 15px; margin-bottom: 15px; }
         .day-title-wrap { display: flex; flex-direction: column; }
         .day-title { font-size: 1.4rem; color: var(--deep-pink); font-weight: 700; margin-bottom: 8px; }
         
-        /* 雙天氣區塊設計 */
         .weather-box { display: flex; flex-direction: column; gap: 6px; }
-        .weather-info {
-            font-size: 0.85rem; color: #555; padding: 4px 10px; border-radius: 8px;
-            display: inline-flex; align-items: center; border: 1px solid transparent; min-height: 24px;
-        }
+        .weather-info { font-size: 0.85rem; color: #555; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid transparent; min-height: 24px; }
         .weather-info.jma { background: #e3f2fd; border-color: #bbdefb; }
         .weather-info.tenki { background: #fff3e0; border-color: #ffe0b2; }
         .source-label { font-weight: 700; margin-right: 8px; }
         .weather-info.jma .source-label { color: #1565c0; }
         .weather-info.tenki .source-label { color: #e65100; }
-
-        .day-tag { 
-            background: #ffebee; color: var(--deep-pink); padding: 5px 12px; 
-            border-radius: 20px; font-size: 0.9rem; font-weight: bold; white-space: nowrap;
-        }
+        .day-tag { background: #ffebee; color: var(--deep-pink); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; white-space: nowrap; }
 
         /* --- Checklist 區塊設計 --- */
-        .checklist-section {
-            background: #fdfafb;
-            border: 1px dashed #f48fb1;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        /* 行前準備專屬配色 */
-        .checklist-section.pre-trip {
-            background: #e0f2f1;
-            border: 2px solid #80cbc4;
-            border-left: 6px solid #009688;
-            box-shadow: var(--shadow);
-        }
+        .checklist-section { background: #fdfafb; border: 1px dashed #f48fb1; border-radius: 12px; padding: 15px; margin-bottom: 20px; position: relative; }
+        .checklist-section.pre-trip { background: #e0f2f1; border: 2px solid #80cbc4; border-left: 6px solid #009688; box-shadow: var(--shadow); }
         .checklist-section.pre-trip .checklist-title { color: #00695c; font-size: 1.2rem; }
-        .checklist-section.pre-trip input[type="text"] { border-color: #80cbc4; }
         .checklist-section.pre-trip input[type="text"]:focus { border-color: #009688; }
         .checklist-section.pre-trip button.add-btn { background: #009688; }
         .checklist-section.pre-trip button.add-btn:hover { background: #00796b; }
         .checklist-section.pre-trip input[type="checkbox"] { accent-color: #009688; }
 
-        .checklist-title {
-            font-weight: 700; color: var(--deep-pink); margin: 0 0 10px 0;
-            display: flex; align-items: center; gap: 6px; font-size: 1.05rem;
-        }
-        .checklist-items { list-style: none; padding: 0; margin: 0 0 12px 0; }
-        .checklist-items li {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-            background: rgba(255,255,255,0.6); padding: 6px 10px; border-radius: 8px;
-        }
-        .checklist-items input[type="checkbox"] {
-            width: 18px; height: 18px; accent-color: var(--deep-pink); cursor: pointer; flex-shrink: 0;
-        }
-        .checklist-items label {
-            font-size: 0.95rem; color: #333; cursor: pointer; user-select: none; flex: 1; transition: 0.2s;
-            word-break: break-word;
-        }
+        .checklist-title { font-weight: 700; color: var(--deep-pink); margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px; font-size: 1.05rem; }
+        .checklist-items { list-style: none; padding: 0; margin: 0 0 12px 0; min-height: 30px;}
+        .checklist-items li { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.6); padding: 6px 10px; border-radius: 8px; }
+        .checklist-items input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--deep-pink); cursor: pointer; flex-shrink: 0; }
+        .checklist-items label { font-size: 0.95rem; color: #333; cursor: pointer; user-select: none; flex: 1; transition: 0.2s; word-break: break-word; }
         .checklist-items input[type="checkbox"]:checked + label { text-decoration: line-through; color: #9e9e9e; }
         
-        /* 刪除按鈕 */
-        .delete-btn {
-            background: transparent; border: none; color: #ff5252; cursor: pointer;
-            font-size: 1.1rem; padding: 0 5px; opacity: 0.4; transition: 0.2s; flex-shrink: 0;
-        }
+        .delete-btn { background: transparent; border: none; color: #ff5252; cursor: pointer; font-size: 1.1rem; padding: 0 5px; opacity: 0.4; transition: 0.2s; flex-shrink: 0; }
         .delete-btn:hover { opacity: 1; transform: scale(1.1); }
 
+        .loading-msg { color: #888; font-size: 0.9rem; font-style: italic; background: none !important;}
+
         .checklist-add { display: flex; gap: 8px; }
-        .checklist-add input {
-            flex: 1; padding: 8px 12px; border: 1px solid #f8bbd0; border-radius: 20px;
-            font-size: 0.9rem; outline: none; background: #fff;
-        }
+        .checklist-add input { flex: 1; padding: 8px 12px; border: 1px solid #f8bbd0; border-radius: 20px; font-size: 0.9rem; outline: none; background: #fff; }
         .checklist-add input:focus { border-color: var(--deep-pink); }
-        .checklist-add button.add-btn {
-            background: var(--deep-pink); color: white; border: none; border-radius: 20px;
-            padding: 0 15px; cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.2s;
-        }
+        .checklist-add button.add-btn { background: var(--deep-pink); color: white; border: none; border-radius: 20px; padding: 0 15px; cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.2s; }
         .checklist-add button.add-btn:hover { background: #c2185b; }
+        
+        /* 雲端連線狀態提示 */
+        .sync-status { position: absolute; top: 15px; right: 15px; font-size: 0.8rem; color: #999; display: flex; align-items: center; gap: 4px; }
+        .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+        .sync-dot.online { background: #4caf50; box-shadow: 0 0 5px #4caf50; }
 
         /* --- 時間軸設計 --- */
         .timeline-item { position: relative; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
@@ -198,32 +109,19 @@
         .event-title { font-weight: 500; font-size: 1.05rem; flex: 1; }
         .toggle-icon { font-size: 0.8rem; color: #888; transition: transform 0.3s; }
         .timeline-item.active .toggle-icon { transform: rotate(180deg); }
-        .event-details {
-            display: none; background: #fafafa; padding: 15px; margin: 5px 0 5px 70px;
-            border-radius: 8px; font-size: 0.95rem; color: #555; border-left: 3px solid #ddd;
-        }
+        .event-details { display: none; background: #fafafa; padding: 15px; margin: 5px 0 5px 70px; border-radius: 8px; font-size: 0.95rem; color: #555; border-left: 3px solid #ddd; }
         .event-details.show { display: block; animation: slideDown 0.3s ease-out; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .detail-point { margin-bottom: 6px; display: flex; align-items: start; }
         .detail-point::before { content: "•"; color: var(--deep-pink); margin-right: 8px; font-weight: bold; }
-        .food-section {
-            background: #fff8e1; padding: 12px 15px; border-radius: 10px; margin-top: 15px;
-            border: 1px solid #ffe0b2; display: flex; gap: 15px; flex-wrap: wrap;
-        }
+        .food-section { background: #fff8e1; padding: 12px 15px; border-radius: 10px; margin-top: 15px; border: 1px solid #ffe0b2; display: flex; gap: 15px; flex-wrap: wrap; }
         .food-item { display: flex; align-items: center; font-size: 0.9rem; font-weight: 500; }
 
         /* --- 雨天備案與地圖 --- */
-        .rainy-backup {
-            background: #e3f2fd; border: 1px solid #bbdefb; border-left: 5px solid #2196f3;
-            border-radius: 8px; padding: 15px; margin-top: 15px;
-        }
+        .rainy-backup { background: #e3f2fd; border: 1px solid #bbdefb; border-left: 5px solid #2196f3; border-radius: 8px; padding: 15px; margin-top: 15px; }
         .rainy-backup h4 { color: #1565c0; margin: 0 0 8px 0; font-size: 1.05rem; display: flex; align-items: center; gap: 5px; }
         .rainy-backup p { margin: 0; font-size: 0.95rem; color: #424242; line-height: 1.5; }
-
-        .btn-map {
-            display: inline-block; background: var(--accent-blue); color: white; padding: 8px 20px;
-            border-radius: 20px; text-decoration: none; font-size: 0.9rem; margin-top: 15px; cursor: pointer; border: none; transition: 0.2s;
-        }
+        .btn-map { display: inline-block; background: var(--accent-blue); color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none; font-size: 0.9rem; margin-top: 15px; cursor: pointer; border: none; transition: 0.2s; }
         .btn-map:hover { background: #3367d6; }
         .map-container { display: none; margin-top: 15px; border-radius: 10px; overflow: hidden; border: 2px solid #eee; background: #fff; }
         .map-container.active { display: block; }
@@ -240,9 +138,7 @@
         .step-note { display: block; font-size: 0.85rem; color: #757575; margin-top: 3px; }
 
         /* --- 購物指南 & 總結 --- */
-        .shopping-section, .summary-section {
-            margin-top: 40px; background: #fff; padding: 30px; border-radius: 25px; box-shadow: var(--shadow);
-        }
+        .shopping-section, .summary-section { margin-top: 40px; background: #fff; padding: 30px; border-radius: 25px; box-shadow: var(--shadow); }
         .shopping-section { border-top: 6px solid #ff9800; }
         .shopping-section h2 { text-align: center; color: #e65100; margin-bottom: 30px; }
         .shopping-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
@@ -259,7 +155,6 @@
         .summary-table th { background-color: #ffebee; color: #c2185b; font-weight: bold; }
         .table-link { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .table-link:hover { text-decoration: underline; }
-
         footer { text-align: center; padding: 40px; color: #888; font-size: 0.9rem; }
 
         @media (max-width: 600px) {
@@ -274,7 +169,7 @@
 
 <div class="container">
     <header>
-        <h1>🌸 名古屋親子櫻花之旅 (最終版)</h1>
+        <h1>🌸 名古屋親子櫻花之旅 (即時同步版)</h1>
         <div class="flight-box">
             <div class="flight-row">
                 <div><span class="flight-tag">去程</span> <strong>3/30 (一)</strong></div>
@@ -288,16 +183,10 @@
     </header>
 
     <div class="checklist-section pre-trip" data-day="pretrip">
+        <div class="sync-status"><div class="sync-dot" id="dot_pretrip"></div> 雲端</div>
         <div class="checklist-title">✈️ 出發前：行前準備清單</div>
         <ul class="checklist-items">
-            <li><input type="checkbox" id="pt_1"><label for="pt_1">確認全家護照效期 (需大於 6 個月)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_2"><label for="pt_2">填寫 Visit Japan Web (VJW) 入境與海關申報並截圖</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_3"><label for="pt_3">投保海外旅遊平安險 / 旅遊不便險</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_4"><label for="pt_4">日幣現金兌換 (建議準備足夠現金，部分店家不收卡)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_5"><label for="pt_5">購買並確認網路 eSIM / SIM 卡或 Wi-Fi 機</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_6"><label for="pt_6">全家 6天5夜 換洗衣物打包 (春季建議洋蔥式穿搭)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_7"><label for="pt_7">兒童/成人常備藥品 (退燒、止瀉、感冒藥、防蚊蟲、OK繃)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-            <li><input type="checkbox" id="pt_8"><label for="pt_8">確認訂位紀錄 (吉卜力Klook憑證、敘敘苑燒肉、飯店確認信)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+            <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
         </ul>
         <div class="checklist-add">
             <input type="text" placeholder="輸入想增加的行前準備項目..." onkeypress="handleChecklistEnter(event, this)">
@@ -318,13 +207,10 @@
         </div>
 
         <div class="checklist-section" data-day="day1">
+            <div class="sync-status"><div class="sync-dot" id="dot_day1"></div> 雲端</div>
             <div class="checklist-title">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d1_1"><label for="d1_1">全家護照與電子機票</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d1_2"><label for="d1_2">錢包 (日幣現金、信用卡)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d1_3"><label for="d1_3">手機、行動電源、網卡/eSIM</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d1_4"><label for="d1_4">兒童安撫零食與小玩具 (搭機/搭車用)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d1_5"><label for="d1_5">嬰兒推車與濕紙巾</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
             <div class="checklist-add">
                 <input type="text" placeholder="輸入想增加的物品..." onkeypress="handleChecklistEnter(event, this)">
@@ -332,477 +218,384 @@
             </div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">11:05</span><span class="event-title">✈️ 抵達中部國際機場 (NGO) 第1航廈</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">通關後，跟隨指標搭乘名鐵前往名古屋站。</div>
-                <div class="detail-point">若小孩肚子餓，機場 4F 有「矢場豬排」與「蝦餅」可先吃或買。</div>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">14:00</span><span class="event-title">🚅 磁浮鐵道館 (SCMAGLEV and Railway Park)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">**必看亮點**：C62 蒸氣火車、歷代新幹線實體車廂展示。</div>
-                <div class="detail-point">**親子推薦**：2F 有「兒童遊戲區」與「模擬駕駛體驗」(需抽籤/付費)。</div>
-                <div class="detail-point">館內有販售超可愛的「新幹線造型便當」，可作為點心。</div>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">17:30</span><span class="event-title">✨ Maker's Pier 散策 & 晚餐</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">位於樂高樂園旁的戶外商場，有許多餐廳與體驗工坊。</div>
-                <div class="detail-point">晚上點燈後氣氛很好，還有整點的水舞秀 (噴水池)。</div>
-            </div>
-        </div>
-        <div class="food-section">
-            <div class="food-item">🍜 午：名站拉麵街</div><div class="food-item">🐷 晚：矢場味噌豬排 (Maker's Pier店)</div>
-        </div>
-        <div class="rainy-backup">
-            <h4>☔ 雨天備案</h4>
-            <p><strong>磁浮鐵道館</strong>本身為全室內空間，不受雨天影響。若傍晚 Maker's Pier 雨勢過大，建議提早進入**「樂高樂園飯店」**大廳玩樂高積木池。</p>
-        </div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">11:05</span><span class="event-title">✈️ 抵達中部國際機場 (NGO) 第1航廈</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">通關後，跟隨指標搭乘名鐵前往名古屋站。</div><div class="detail-point">若小孩肚子餓，機場 4F 有「矢場豬排」與「蝦餅」可先吃或買。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">14:00</span><span class="event-title">🚅 磁浮鐵道館 (SCMAGLEV and Railway Park)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**必看亮點**：C62 蒸氣火車、歷代新幹線實體車廂展示。</div><div class="detail-point">**親子推薦**：2F 有「兒童遊戲區」與「模擬駕駛體驗」(需抽籤/付費)。</div><div class="detail-point">館內有販售超可愛的「新幹線造型便當」，可作為點心。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">17:30</span><span class="event-title">✨ Maker's Pier 散策 & 晚餐</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">位於樂高樂園旁的戶外商場，有許多餐廳與體驗工坊。</div><div class="detail-point">晚上點燈後氣氛很好，還有整點的水舞秀 (噴水池)。</div></div></div>
+        <div class="food-section"><div class="food-item">🍜 午：名站拉麵街</div><div class="food-item">🐷 晚：矢場味噌豬排 (Maker's Pier店)</div></div>
+        <div class="rainy-backup"><h4>☔ 雨天備案</h4><p><strong>磁浮鐵道館</strong>本身為全室內空間，不受雨天影響。若傍晚 Maker's Pier 雨勢過大，建議提早進入**「樂高樂園飯店」**大廳玩樂高積木池。</p></div>
+        <button class="btn-map" onclick="toggleMap('map1')">🗺️ 顯示路線：機場 ➔ 樂高飯店 (含大眾轉乘)</button>
+        <div id="map1" class="map-container"><iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d104593.63353549231!2d136.79092829288673!3d34.96057863588722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x6004eb7c5af7b219%3A0x6b4cdd3bd6d1e4eb!2sChubu%20Centrair%20International%20Airport%20(NGO)%2C%201%20Centrair%2C%20Tokoname%2C%20Aichi%20479-0881%2C%20Japan!3m2!1d34.8584852!2d136.8126744!4m5!1s0x60037a3294c65e8b%3A0xe5479cd191eb4ec4!2sLEGOLAND%20Japan%20Hotel%2C%202%20Chome-7-1%20Kinjoyuto%2C%20Minato%20Ward%2C%20Nagoya%2C%20Aichi%20455-8605%2C%20Japan!3m2!1d35.0489953!2d136.84365319999998!5e0!3m2!1sen!2stw!4v1711468000000!5m2!1sen!2stw"></iframe></div>
     </div>
 
     <div class="day-card">
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">3/31 (二) 樂高樂園全攻略</span>
-                <div class="weather-box">
-                    <div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div>
-                    <div class="weather-info tenki" data-date="2026-03-31"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div>
-                </div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div><div class="weather-info tenki" data-date="2026-03-31"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag">宿：樂高飯店</span>
         </div>
 
         <div class="checklist-section" data-day="day2">
+            <div class="sync-status"><div class="sync-dot" id="dot_day2"></div> 雲端</div>
             <div class="checklist-title">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d2_1"><label for="d2_1">樂高樂園 & SEA LIFE 電子門票</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d2_2"><label for="d2_2">兒童替換衣物 (玩水/流汗後更換)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d2_3"><label for="d2_3">輕便雨衣與防曬帽</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d2_4"><label for="d2_4">兒童環保水壺</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d2_5"><label for="d2_5">舒適好走的運動鞋</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
-            <div class="checklist-add">
-                <input type="text" placeholder="輸入想增加的物品..." onkeypress="handleChecklistEnter(event, this)">
-                <button class="add-btn" onclick="addChecklistItem(this)">＋ 新增</button>
-            </div>
+            <div class="checklist-add"><input type="text" placeholder="輸入想增加的物品..." onkeypress="handleChecklistEnter(event, this)"><button class="add-btn" onclick="addChecklistItem(this)">＋ 新增</button></div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">09:30</span><span class="event-title">🎢 LEGOLAND Japan (全日遊玩)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">**推薦設施 (4歲)**：Duplo Valley (得寶谷)、Submarine Adventure (潛水艇)、Driving School (駕駛學校-幼兒版)。</div>
-                <div class="detail-point">**Miniland**：用千萬塊樂高積木堆砌的日本縮影，必拍照！</div>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">15:00</span><span class="event-title">🐠 SEA LIFE Nagoya 水族館</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">位於樂高樂園正對面，憑套票可進入。</div>
-                <div class="detail-point">這是一座「體驗型」水族館，有很多按鈕和觸摸池可以讓小孩互動。</div>
-            </div>
-        </div>
-        <div class="food-section">
-            <div class="food-item">🍔 午：園區主題餐廳</div><div class="food-item">🍽️ 晚：飯店自助餐</div>
-        </div>
-        <div class="rainy-backup">
-            <h4>☔ 雨天備案</h4>
-            <p>若遇大雨，建議將重心完全轉移至正對面的<strong>「SEA LIFE 水族館」</strong>(全室內)。樂高園區內也有室內設施可躲雨(例如潛水艇)。</p>
-        </div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">09:30</span><span class="event-title">🎢 LEGOLAND Japan (全日遊玩)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**推薦設施 (4歲)**：Duplo Valley (得寶谷)、Submarine Adventure (潛水艇)、Driving School (駕駛學校-幼兒版)。</div><div class="detail-point">**Miniland**：用千萬塊樂高積木堆砌的日本縮影，必拍照！</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">15:00</span><span class="event-title">🐠 SEA LIFE Nagoya 水族館</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">位於樂高樂園正對面，憑套票可進入。</div><div class="detail-point">這是一座「體驗型」水族館，有很多按鈕和觸摸池可以讓小孩互動。</div></div></div>
+        <div class="food-section"><div class="food-item">🍔 午：園區主題餐廳</div><div class="food-item">🍽️ 晚：飯店自助餐</div></div>
+        <div class="rainy-backup"><h4>☔ 雨天備案</h4><p>若遇大雨，建議將重心完全轉移至正對面的<strong>「SEA LIFE 水族館」</strong>(全室內)。樂高園區內也有室內設施可躲雨(例如潛水艇)。</p></div>
     </div>
 
     <div class="day-card" style="border-left-color: #039be5;">
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/01 (三) 虎鯨與舒適轉場</span>
-                <div class="weather-box">
-                    <div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div>
-                    <div class="weather-info tenki" data-date="2026-04-01"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div>
-                </div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div><div class="weather-info tenki" data-date="2026-04-01"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#039be5;">宿：萬豪飯店</span>
         </div>
 
         <div class="checklist-section" data-day="day3" style="border-color: #81d4fa; background: #fbfdff;">
+            <div class="sync-status"><div class="sync-dot" id="dot_day3"></div> 雲端</div>
             <div class="checklist-title" style="color: #0288d1;">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d3_1"><label for="d3_1">整理好的所有大型行李 (準備轉場)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d3_2"><label for="d3_2">給計程車司機的日文溝通字卡 (手機截圖)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d3_3"><label for="d3_3">名古屋港水族館門票</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d3_4"><label for="d3_4">隨身電源與充電線</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d3_5"><label for="d3_5">悠遊卡/西瓜卡 (若搭乘大眾運輸)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
-            <div class="checklist-add">
-                <input type="text" placeholder="輸入想增加的物品..." style="border-color: #81d4fa;" onkeypress="handleChecklistEnter(event, this)">
-                <button class="add-btn" onclick="addChecklistItem(this)" style="background: #0288d1;">＋ 新增</button>
-            </div>
+            <div class="checklist-add"><input type="text" placeholder="輸入想增加的物品..." style="border-color: #81d4fa;" onkeypress="handleChecklistEnter(event, this)"><button class="add-btn" onclick="addChecklistItem(this)" style="background: #0288d1;">＋ 新增</button></div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🚖 計程車轉場 (方案 B)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">**不用搬行李！** 請飯店叫大車，直達萬豪 15F 大廳。</div>
-                <div class="detail-point">將行李寄放於萬豪櫃檯後，輕裝出發去水族館。</div>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">11:30</span><span class="event-title">🐬 名古屋港水族館</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details">
-                <div class="detail-point">**必看王牌**：日本唯二能看到的「虎鯨 (Killer Whale)」表演。</div>
-                <div class="detail-point">午餐可在水族館內的景觀餐廳解決，順便休息。</div>
-            </div>
-        </div>
-        <div class="food-section">
-            <div class="food-item">🐟 午：水族館餐廳</div><div class="food-item">🍱 晚：備長鰻魚飯 (JR Gate Tower)</div>
-        </div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🚖 計程車轉場 (方案 B)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**不用搬行李！** 請飯店叫大車，直達萬豪 15F 大廳。</div><div class="detail-point">將行李寄放於萬豪櫃檯後，輕裝出發去水族館。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">11:30</span><span class="event-title">🐬 名古屋港水族館</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**必看王牌**：日本唯二能看到的「虎鯨 (Killer Whale)」表演。</div><div class="detail-point">午餐可在水族館內的景觀餐廳解決，順便休息。</div></div></div>
+        <div class="food-section"><div class="food-item">🐟 午：水族館餐廳</div><div class="food-item">🍱 晚：備長鰻魚飯 (JR Gate Tower)</div></div>
+        <button class="btn-map" onclick="toggleMap('map3')" style="background:#039be5;">🗺️ 顯示路線：萬豪 ➔ 港水族館</button>
+        <div id="map3" class="map-container"><iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d26105.748384260904!2d136.877840130635!3d35.12285183864757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x600376e7943ce8c5%3A0xcb06547ec4c6d328!2sNagoya%20Marriott%20Associa%20Hotel%2C%201%20Chome-1-4%20Meieki%2C%20Nakamura%20Ward%2C%20Nagoya%2C%20Aichi%20450-6002%2C%20Japan!3m2!1d35.170566!2d136.882236!4m5!1s0x60037751794b62db%3A0x6b2e3e5e40c0f83!2sPort%20of%20Nagoya%20Public%20Aquarium%2C%201%20Chome-3%20Minatomachi%2C%20Minato%20Ward%2C%20Nagoya%2C%20Aichi%20455-0033%2C%20Japan!3m2!1d35.0905473!2d136.8781442!5e0!3m2!1sen!2stw!4v1711468100000!5m2!1sen!2stw"></iframe></div>
     </div>
 
     <div class="day-card" style="border-left-color: #7cb342;">
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/02 (四) 吉卜力專車一日遊</span>
-                <div class="weather-box">
-                    <div class="weather-info jma" data-date="2026-04-02"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div>
-                    <div class="weather-info tenki" data-date="2026-04-02"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div>
-                </div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-02"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div><div class="weather-info tenki" data-date="2026-04-02"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="background:#7cb342; color:white;">🚌 Klook 巴士團</span>
         </div>
 
         <div class="checklist-section" data-day="day4" style="border-color: #aed581; background: #fcfff8;">
+            <div class="sync-status"><div class="sync-dot" id="dot_day4"></div> 雲端</div>
             <div class="checklist-title" style="color: #558b2f;">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d4_1"><label for="d4_1">Klook 巴士團憑證 (手機畫面)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d4_2"><label for="d4_2">兒童防暈車藥 (巴士搭乘備用)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d4_3"><label for="d4_3">輕便雨衣 (吉卜力園區風大且需戶外步行)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d4_4"><label for="d4_4">相機與空容量手機 (非常好拍)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d4_5"><label for="d4_5">防風薄外套</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
-            <div class="checklist-add">
-                <input type="text" placeholder="輸入想增加的物品..." style="border-color: #aed581;" onkeypress="handleChecklistEnter(event, this)">
-                <button class="add-btn" onclick="addChecklistItem(this)" style="background: #558b2f;">＋ 新增</button>
-            </div>
+            <div class="checklist-add"><input type="text" placeholder="輸入想增加的物品..." style="border-color: #aed581;" onkeypress="handleChecklistEnter(event, this)"><button class="add-btn" onclick="addChecklistItem(this)" style="background: #558b2f;">＋ 新增</button></div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">08:30</span><span class="event-title">🚌 萬豪飯店 1F 集合出發</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">搭電梯下樓就能上車。車上會發放專屬的「美味日式便當」。</div></div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🍃 吉卜力公園 (三大熱門區)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">**親子必去**：大倉庫內的「貓巴士室 (Cat Bus Room)」軟墊遊戲區。</div></div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">15:30</span><span class="event-title">🚗 豐田汽車博物館 (週四限定)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">導遊會分享吉卜力動畫中出現的汽車靈感。</div></div>
-        </div>
-        <div class="food-section">
-            <div class="food-item">🍱 午：特製日式便當</div><div class="food-item">🍲 晚：山本屋味噌烏龍</div>
-        </div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">08:30</span><span class="event-title">🚌 萬豪飯店 1F 集合出發</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">搭電梯下樓就能上車。車上會發放專屬的「美味日式便當」。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🍃 吉卜力公園 (三大熱門區)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**親子必去**：大倉庫內的「貓巴士室 (Cat Bus Room)」軟墊遊戲區。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">15:30</span><span class="event-title">🚗 豐田汽車博物館 (週四限定)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">導遊會分享吉卜力動畫中出現的汽車靈感。</div></div></div>
+        <div class="food-section"><div class="food-item">🍱 午：特製日式便當</div><div class="food-item">🍲 晚：山本屋味噌烏龍</div></div>
     </div>
 
     <div class="day-card" style="border-left-color: #fb8c00;">
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/03 (五) 櫻花與燒肉</span>
-                <div class="weather-box">
-                    <div class="weather-info jma" data-date="2026-04-03"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div>
-                    <div class="weather-info tenki" data-date="2026-04-03"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div>
-                </div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-03"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div><div class="weather-info tenki" data-date="2026-04-03"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#fb8c00;">宿：萬豪飯店</span>
         </div>
 
         <div class="checklist-section" data-day="day5" style="border-color: #ffcc80; background: #fffcf8;">
+            <div class="sync-status"><div class="sync-dot" id="dot_day5"></div> 雲端</div>
             <div class="checklist-title" style="color: #ef6c00;">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d5_1"><label for="d5_1">敘敘苑訂位確認信 / 截圖 (重要)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d5_2"><label for="d5_2">嬰兒推車 (名古屋城園區很大，散步好用)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d5_3"><label for="d5_3">小型野餐墊 (備用，賞櫻休息可用)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d5_4"><label for="d5_4">兒童替換衣物 (若轉去科學館玩樂備用)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d5_5"><label for="d5_5">西瓜卡/地鐵一日券</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
-            <div class="checklist-add">
-                <input type="text" placeholder="輸入想增加的物品..." style="border-color: #ffcc80;" onkeypress="handleChecklistEnter(event, this)">
-                <button class="add-btn" onclick="addChecklistItem(this)" style="background: #ef6c00;">＋ 新增</button>
-            </div>
+            <div class="checklist-add"><input type="text" placeholder="輸入想增加的物品..." style="border-color: #ffcc80;" onkeypress="handleChecklistEnter(event, this)"><button class="add-btn" onclick="addChecklistItem(this)" style="background: #ef6c00;">＋ 新增</button></div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🏯 名古屋城 (賞櫻)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">**賞櫻熱點**：護城河沿岸與城內廣場，約有 1000 株櫻花。</div></div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">17:30</span><span class="event-title">🥩 敘敘苑 名古屋名站店 (已訂位)</span><span class="toggle-icon">▼</span></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">🏯 名古屋城 (賞櫻)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">**賞櫻熱點**：護城河沿岸與城內廣場，約有 1000 株櫻花。</div></div></div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">17:30</span><span class="event-title">🥩 敘敘苑 名古屋名站店 (已訂位)</span><span class="toggle-icon">▼</span></div>
             <div class="event-details"><div class="detail-point">位於 Ｍ三ダイニングビル 9F。**必點**：上等牛五花、牛舌。</div></div>
         </div>
-        <div class="food-section">
-            <div class="food-item">🍢 午：金鯱橫丁</div><div class="food-item">🥩 晚：敘敘苑燒肉</div>
-        </div>
+        <div class="food-section"><div class="food-item">🍢 午：金鯱橫丁</div><div class="food-item">🥩 晚：敘敘苑燒肉</div></div>
+        <button class="btn-map" onclick="toggleMap('map5')" style="background:#fb8c00;">🗺️ 顯示路線：萬豪 ➔ 名古屋城</button>
+        <div id="map5" class="map-container"><iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d13054.494663851508!2d136.88701046461973!3d35.178496781286915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x600376e7943ce8c5%3A0xcb06547ec4c6d328!2sNagoya%20Marriott%20Associa%20Hotel%2C%201%20Chome-1-4%20Meieki%2C%20Nakamura%20Ward%2C%20Nagoya%2C%20Aichi%20450-6002%2C%20Japan!3m2!1d35.170566!2d136.882236!4m5!1s0x60037135e5d34fbb%3A0xe1005b637dcf9558!2sNagoya%20Castle%2C%201%201%20Honmaru%2C%20Naka%20Ward%2C%20Nagoya%2C%20Aichi%20460-0031%2C%20Japan!3m2!1d35.1838531!2d136.899696!5e0!3m2!1sen!2stw!4v1711468300000!5m2!1sen!2stw"></iframe></div>
     </div>
 
     <div class="day-card" style="border-left-color: #757575;">
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/04 (六) 再見名古屋</span>
-                <div class="weather-box">
-                    <div class="weather-info jma" data-date="2026-04-04"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div>
-                    <div class="weather-info tenki" data-date="2026-04-04"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div>
-                </div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-04"><span class="source-label">[JMA]</span> ⏳ 載入官方預報中...</div><div class="weather-info tenki" data-date="2026-04-04"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#757575;">✈️ CI155</span>
         </div>
 
         <div class="checklist-section" data-day="day6" style="border-color: #bdbdbd; background: #fafafa;">
+            <div class="sync-status"><div class="sync-dot" id="dot_day6"></div> 雲端</div>
             <div class="checklist-title" style="color: #616161;">🎒 今日隨身物品清單</div>
             <ul class="checklist-items">
-                <li><input type="checkbox" id="d6_1"><label for="d6_1">全家護照 (最重要的！)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d6_2"><label for="d6_2">打包完畢的所有行李箱與推車</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d6_3"><label for="d6_3">機場免稅店最後採買清單 (赤福、蝦餅)</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
-                <li><input type="checkbox" id="d6_4"><label for="d6_4">回程航班電子機票</label><button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button></li>
+                <li class="loading-msg">⏳ 連線至雲端資料庫中...</li>
             </ul>
-            <div class="checklist-add">
-                <input type="text" placeholder="輸入想增加的物品..." style="border-color: #bdbdbd;" onkeypress="handleChecklistEnter(event, this)">
-                <button class="add-btn" onclick="addChecklistItem(this)" style="background: #616161;">＋ 新增</button>
-            </div>
+            <div class="checklist-add"><input type="text" placeholder="輸入想增加的物品..." style="border-color: #bdbdbd;" onkeypress="handleChecklistEnter(event, this)"><button class="add-btn" onclick="addChecklistItem(this)" style="background: #616161;">＋ 新增</button></div>
         </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">08:30</span><span class="event-title">🍳 萬豪飯店早餐</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">悠閒吃完早餐後，回房整理行李，準備退房。</div></div>
-        </div>
-         <div class="timeline-item">
-            <div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">前往機場 (μ-SKY)</span><span class="toggle-icon">▼</span></div>
-            <div class="event-details"><div class="detail-point">搭乘名鐵 μ-SKY 特急抵達機場 第1航廈，先托運行李接著逛免稅店。</div></div>
-        </div>
+        <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">08:30</span><span class="event-title">🍳 萬豪飯店早餐</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">悠閒吃完早餐後，回房整理行李，準備退房。</div></div></div>
+         <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">10:00</span><span class="event-title">前往機場 (μ-SKY)</span><span class="toggle-icon">▼</span></div><div class="event-details"><div class="detail-point">搭乘名鐵 μ-SKY 特急抵達機場 第1航廈，先托運行李接著逛免稅店。</div></div></div>
     </div>
 
-    <div class="summary-section">
-        <h2>📍 景點與餐廳快速導航總覽</h2>
-        <table class="summary-table">
-            <thead>
-                <tr>
-                    <th>類別</th>
-                    <th>名稱</th>
-                    <th>Google Map 連結</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>🏨 飯店</td><td>樂高樂園飯店</td><td><a href="https://maps.app.goo.gl/h69xWfRjA9H2R9w67" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🏨 飯店</td><td>名古屋萬豪飯店</td><td><a href="https://maps.app.goo.gl/29z8TQQh1MvB12Ew5" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🎡 景點</td><td>磁浮鐵道館</td><td><a href="https://maps.app.goo.gl/Z5C9xJ8zJjJ31QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🎡 景點</td><td>名古屋港水族館</td><td><a href="https://maps.app.goo.gl/6N1bHn1W1A22GZ918" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🎡 景點</td><td>吉卜力公園</td><td><a href="https://maps.app.goo.gl/G7K8jZ8vG3J1Q1Bf7" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🎡 景點</td><td>名古屋城</td><td><a href="https://maps.app.goo.gl/V3A9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🎡 景點</td><td>名古屋市科學館 (雨天備案)</td><td><a href="https://www.google.com/maps/search/?api=1&query=Nagoya+Marriott+Associa+Hotel7" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🍱 餐廳</td><td>矢場味噌豬排 (Maker's Pier店)</td><td><a href="https://maps.app.goo.gl/Q7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🍱 餐廳</td><td>備長鰻魚飯 (JR Gate Tower)</td><td><a href="https://maps.app.goo.gl/R7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-                <tr><td>🍱 餐廳</td><td>敘敘苑 名古屋名站店 (Ｍ三ダイニングビル 9F)</td><td><a href="https://maps.app.goo.gl/T7M9x181ZJjJ1QjH9" target="_blank" class="table-link">開啟地圖 ↗</a></td></tr>
-            </tbody>
-        </table>
+    <div class="shopping-section">
+        <h2>🛍️ 名古屋必買購物指南 (伴手禮推薦)</h2>
+        <div class="shopping-grid">
+            <div class="shopping-card"><img src="./images/shrimp_cookies.jpg" alt="蝦餅示意圖"><h4>🦐 蝦餅</h4><p>長輩與小孩最愛！口感硬脆、鮮味濃郁。</p></div>
+            <div class="shopping-card"><img src="./images/akafuku_8_cut-min.png" alt="赤福 Akafuku"><h4>🍡 赤福</h4><p>綿密紅豆泥包裹著軟糯麻糬，甜而不膩。保存期限短，建議機場買。</p></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // 手風琴展開功能
-    function toggleDetail(element) {
-        const details = element.nextElementSibling;
-        const parent = element.parentElement;
-        if (details.classList.contains('show')) {
-            details.classList.remove('show');
-            parent.classList.remove('active');
-        } else {
-            details.classList.add('show');
-            parent.classList.add('active');
+    // ==========================================
+    // 1. Firebase 雲端設定區 (請在這裡貼上您的 Config)
+    // ==========================================
+    const firebaseConfig = {
+        // === 請將從 Firebase 複製的設定貼到這個大括號裡面 ===
+        apiKey: "AIzaSyAfrge29Wjzj380rhYWuuunV-zUHaEBE3k",
+        authDomain: "nagoya-786bf.firebaseapp.com",
+        databaseURL: "https://nagoya-786bf-default-rtdb.firebaseio.com",
+        projectId: "nagoya-786bf",
+        storageBucket: "nagoya-786bf.firebasestorage.app",
+        messagingSenderId: "58298676612",
+        appId: "1:58298676612:web:b304611feddd4b7d0719d1",
+        measurementId: "G-K96ST9SPLT"
+    };
+
+    // ==========================================
+    // 2. 準備完整的「6天5夜行程初始資料庫」
+    // ==========================================
+    const defaultChecklistData = {
+        pretrip: {
+            pt_1: { text: "確認全家護照效期 (需大於 6 個月)", checked: false },
+            pt_2: { text: "填寫 Visit Japan Web (VJW) 入境與海關申報並截圖", checked: false },
+            pt_3: { text: "投保海外旅遊平安險 / 旅遊不便險", checked: false },
+            pt_4: { text: "日幣現金兌換 (建議準備足夠現金，部分店家不收卡)", checked: false },
+            pt_5: { text: "購買並確認網路 eSIM / SIM 卡或 Wi-Fi 機", checked: false },
+            pt_6: { text: "全家 6天5夜 換洗衣物打包 (春季建議洋蔥式穿搭)", checked: false },
+            pt_7: { text: "兒童/成人常備藥品 (退燒、止瀉、感冒藥、防蚊蟲、OK繃)", checked: false },
+            pt_8: { text: "確認訂位紀錄 (吉卜力Klook憑證、敘敘苑燒肉、飯店確認信)", checked: false }
+        },
+        day1: {
+            d1_1: { text: "全家護照與電子機票", checked: false },
+            d1_2: { text: "錢包 (日幣現金、信用卡)", checked: false },
+            d1_3: { text: "手機、行動電源、網卡/eSIM", checked: false },
+            d1_4: { text: "兒童安撫零食與小玩具 (搭機/搭車用)", checked: false },
+            d1_5: { text: "嬰兒推車與濕紙巾", checked: false }
+        },
+        day2: {
+            d2_1: { text: "樂高樂園 & SEA LIFE 電子門票", checked: false },
+            d2_2: { text: "兒童替換衣物 (玩水/流汗後更換)", checked: false },
+            d2_3: { text: "輕便雨衣與防曬帽", checked: false },
+            d2_4: { text: "兒童環保水壺", checked: false },
+            d2_5: { text: "舒適好走的運動鞋", checked: false }
+        },
+        day3: {
+            d3_1: { text: "整理好的所有大型行李 (準備轉場)", checked: false },
+            d3_2: { text: "給計程車司機的日文溝通字卡 (手機截圖)", checked: false },
+            d3_3: { text: "名古屋港水族館門票", checked: false },
+            d3_4: { text: "隨身電源與充電線", checked: false },
+            d3_5: { text: "悠遊卡/西瓜卡 (若搭乘大眾運輸)", checked: false }
+        },
+        day4: {
+            d4_1: { text: "Klook 巴士團憑證 (手機畫面)", checked: false },
+            d4_2: { text: "兒童防暈車藥 (巴士搭乘備用)", checked: false },
+            d4_3: { text: "輕便雨衣 (吉卜力園區風大且需戶外步行)", checked: false },
+            d4_4: { text: "相機與空容量手機 (非常好拍)", checked: false },
+            d4_5: { text: "防風薄外套", checked: false }
+        },
+        day5: {
+            d5_1: { text: "敘敘苑訂位確認信 / 截圖 (重要)", checked: false },
+            d5_2: { text: "嬰兒推車 (名古屋城園區很大，散步好用)", checked: false },
+            d5_3: { text: "小型野餐墊 (備用，賞櫻休息可用)", checked: false },
+            d5_4: { text: "兒童替換衣物 (若轉去科學館玩樂備用)", checked: false },
+            d5_5: { text: "西瓜卡/地鐵一日券", checked: false }
+        },
+        day6: {
+            d6_1: { text: "全家護照 (最重要的！)", checked: false },
+            d6_2: { text: "打包完畢的所有行李箱與推車", checked: false },
+            d6_3: { text: "機場免稅店最後採買清單 (赤福、蝦餅)", checked: false },
+            d6_4: { text: "回程航班電子機票", checked: false }
         }
-    }
-
-    // 地圖開關功能
-    function toggleMap(mapId) {
-        document.getElementById(mapId).classList.toggle('active');
-    }
+    };
 
     // ==========================================
-    // Checklist 功能區 (包含新增、刪除、本機記憶)
+    // 3. Checklist 雲端 DB 操作與同步邏輯
     // ==========================================
+    let db;
+    let isFirebaseReady = false;
     
-    document.addEventListener("DOMContentLoaded", () => {
-        loadChecklistData();
-        fetchNagoyaWeather();
-    });
-
-    // 處理 Enter 鍵新增
-    function handleChecklistEnter(event, inputElement) {
-        if (event.key === "Enter") {
-            addChecklistItem(inputElement.nextElementSibling);
-        }
+    if(firebaseConfig.apiKey) {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        isFirebaseReady = true;
+    } else {
+        console.warn("尚未設定 Firebase Config，目前為斷線狀態！請完成第一步操作。");
+        document.querySelectorAll('.loading-msg').forEach(el => el.innerHTML = "⚠️ 尚未設定資料庫，請填寫 Config");
     }
 
-    // 新增物品按鈕邏輯
-    function addChecklistItem(btnElement) {
-        const input = btnElement.previousElementSibling;
-        const text = input.value.trim();
-        if (!text) return;
+    if(isFirebaseReady) {
+        const tripRef = db.ref('nagoya_trip_checklist_2026'); // 指定專屬資料庫節點
 
-        const section = btnElement.closest('.checklist-section');
-        const ul = section.querySelector('.checklist-items');
-        const dayId = section.dataset.day;
-        
-        const itemId = `cb_${dayId}_${Date.now()}`;
-        
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <input type="checkbox" id="${itemId}">
-            <label for="${itemId}">${text}</label>
-            <button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button>
-        `;
-        
-        ul.appendChild(li);
-        input.value = ""; 
-        saveChecklistData(); 
-    }
-
-    // 刪除物品按鈕邏輯
-    function deleteChecklistItem(btnElement) {
-        const li = btnElement.closest('li');
-        li.remove();
-        saveChecklistData();
-    }
-
-    // 監聽 Checkbox 變化存檔
-    document.addEventListener('change', (e) => {
-        if (e.target.type === 'checkbox' && e.target.closest('.checklist-section')) {
-            saveChecklistData();
-        }
-    });
-
-    // 儲存狀態到 LocalStorage
-    function saveChecklistData() {
-        const tripData = {};
-        document.querySelectorAll('.checklist-section').forEach(section => {
-            const dayId = section.dataset.day;
-            const items = [];
-            section.querySelectorAll('li').forEach(li => {
-                const cb = li.querySelector('input[type="checkbox"]');
-                const label = li.querySelector('label').innerText;
-                items.push({ text: label, checked: cb.checked, id: cb.id });
-            });
-            tripData[dayId] = items;
+        // 【動作一】初始化：若 DB 是空的，把寫好的 defaultChecklistData 整個推上去
+        tripRef.once('value', snapshot => {
+            if(!snapshot.exists() || Object.keys(snapshot.val() || {}).length === 0) {
+                console.log("發現資料庫為空，正在匯入預設行前與每日行程清單...");
+                tripRef.set(defaultChecklistData);
+            }
         });
-        localStorage.setItem('nagoyaTripChecklist_v2', JSON.stringify(tripData));
+
+        // 【動作二】雙向同步：隨時聽取 DB 變更，並將最新結果畫在網頁上
+        tripRef.on('value', snapshot => {
+            const data = snapshot.val() || {};
+            renderCloudChecklist(data);
+            
+            // 亮起綠色連線燈，代表同步中
+            document.querySelectorAll('.sync-dot').forEach(dot => dot.classList.add('online'));
+        });
     }
 
-    // 讀取 LocalStorage 狀態
-    function loadChecklistData() {
-        const saved = localStorage.getItem('nagoyaTripChecklist_v2');
-        if (!saved) return; // 沒存過就用預設的 HTML
-
-        const tripData = JSON.parse(saved);
+    // 將 DB 資料繪製到 HTML 畫面上
+    function renderCloudChecklist(data) {
         document.querySelectorAll('.checklist-section').forEach(section => {
             const dayId = section.dataset.day;
-            if (tripData[dayId]) {
-                const ul = section.querySelector('.checklist-items');
-                ul.innerHTML = ''; 
-                tripData[dayId].forEach(item => {
+            const ul = section.querySelector('.checklist-items');
+            ul.innerHTML = ''; // 清空畫面準備重新繪製
+
+            if (data[dayId]) {
+                Object.keys(data[dayId]).forEach(itemId => {
+                    const item = data[dayId][itemId];
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <input type="checkbox" id="${item.id}" ${item.checked ? 'checked' : ''}>
-                        <label for="${item.id}">${item.text}</label>
-                        <button class="delete-btn" onclick="deleteChecklistItem(this)" title="刪除">✖</button>
+                        <input type="checkbox" id="${itemId}" ${item.checked ? 'checked' : ''}>
+                        <label for="${itemId}">${item.text}</label>
+                        <button class="delete-btn" onclick="deleteCloudItem(this)" title="刪除">✖</button>
                     `;
                     ul.appendChild(li);
                 });
+            } else {
+                ul.innerHTML = '<li class="loading-msg" style="color:#aaa;">目前沒有清單項目</li>';
             }
         });
     }
 
+    // 【動作三】新增：對 DB 進行操作
+    window.addChecklistItem = function(btnElement) {
+        if(!isFirebaseReady) return alert("請先完成 Firebase 設定才能新增喔！");
+        
+        const input = btnElement.previousElementSibling;
+        const text = input.value.trim();
+        if (!text) return;
+
+        const dayId = btnElement.closest('.checklist-section').dataset.day;
+        const newItemId = `item_${Date.now()}`; // 產生獨一無二的 ID
+        
+        // 直接對雲端 DB 寫入新節點
+        db.ref(`nagoya_trip_checklist_2026/${dayId}/${newItemId}`).set({
+            text: text,
+            checked: false
+        });
+        
+        input.value = ""; // 清空輸入框
+    }
+
+    // 【動作四】移除：對 DB 進行操作
+    window.deleteCloudItem = function(btnElement) {
+        if(!isFirebaseReady) return;
+        const li = btnElement.closest('li');
+        const dayId = li.closest('.checklist-section').dataset.day;
+        const itemId = li.querySelector('input').id;
+        
+        // 直接從雲端 DB 移除該節點
+        db.ref(`nagoya_trip_checklist_2026/${dayId}/${itemId}`).remove();
+    }
+
+    // 【動作五】打勾/取消打勾：對 DB 進行操作
+    document.addEventListener('change', (e) => {
+        if (e.target.type === 'checkbox' && e.target.closest('.checklist-section') && isFirebaseReady) {
+            const dayId = e.target.closest('.checklist-section').dataset.day;
+            const itemId = e.target.id;
+            
+            // 對雲端 DB 更新 checked 狀態
+            db.ref(`nagoya_trip_checklist_2026/${dayId}/${itemId}`).update({
+                checked: e.target.checked
+            });
+        }
+    });
+
+    function handleChecklistEnter(event, inputElement) {
+        if (event.key === "Enter") window.addChecklistItem(inputElement.nextElementSibling);
+    }
+
     // ==========================================
-    // 天氣抓取區
+    // 4. UI 互動與天氣抓取
     // ==========================================
+    function toggleDetail(element) {
+        const details = element.nextElementSibling;
+        const parent = element.parentElement;
+        details.classList.toggle('show');
+        parent.classList.toggle('active');
+    }
+
+    function toggleMap(mapId) { document.getElementById(mapId).classList.toggle('active'); }
+
     async function fetchNagoyaWeather() {
         const tenkiData = {
-            "2026-03-30": "🌧️ 陰短暫雨 | 🌡️ 13°C - 21°C | 降雨機率 60%",
-            "2026-03-31": "🌧️ 陰短暫雨 | 🌡️ 13°C - 20°C | 降雨機率 60%",
-            "2026-04-01": "☁️ 陰天 | 🌡️ 10°C - 19°C | 降雨機率 --%",
-            "2026-04-02": "⛅ 陰時多雲 | 🌡️ 11°C - 22°C | 降雨機率 --%",
-            "2026-04-03": "🌧️ 陰短暫雨 | 🌡️ 12°C - 21°C | 降雨機率 60%",
-            "2026-04-04": "☁️ 陰天 | 🌡️ 13°C - 20°C | 降雨機率 --%"
+            "2026-03-30": "🌧️ 陰短暫雨 | 🌡️ 13°C - 21°C | 降雨機率 60%", "2026-03-31": "🌧️ 陰短暫雨 | 🌡️ 13°C - 20°C | 降雨機率 60%",
+            "2026-04-01": "☁️ 陰天 | 🌡️ 10°C - 19°C | 降雨機率 --%", "2026-04-02": "⛅ 陰時多雲 | 🌡️ 11°C - 22°C | 降雨機率 --%",
+            "2026-04-03": "🌧️ 陰短暫雨 | 🌡️ 12°C - 21°C | 降雨機率 60%", "2026-04-04": "☁️ 陰天 | 🌡️ 13°C - 20°C | 降雨機率 --%"
         };
         const targetDates = ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04"];
-
-        targetDates.forEach(dateStr => {
-            const tenkiEl = document.querySelector(`.weather-info.tenki[data-date="${dateStr}"]`);
-            if (tenkiEl) tenkiEl.innerHTML = `<span class="source-label">[tenki.jp]</span> ${tenkiData[dateStr]}`;
-        });
-
-        const url = 'https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json';
-        const jmaCodes = {
-            "100": "☀️ 晴朗", "101": "🌤️ 晴時多雲", "102": "⛅ 晴陣雨", "104": "❄️ 晴陣雪",
-            "110": "🌤️ 晴後多雲", "111": "🌤️ 晴後多雲", "112": "🌧️ 晴後陣雨", "114": "❄️ 晴後陣雪",
-            "200": "☁️ 陰天", "201": "⛅ 陰時晴", "202": "🌧️ 陰陣雨", "204": "❄️ 陰陣雪",
-            "210": "⛅ 陰後晴", "211": "⛅ 陰後晴", "212": "🌧️ 陰後陣雨", "214": "❄️ 陰後陣雪",
-            "300": "🌧️ 雨", "301": "🌦️ 雨時晴", "302": "🌧️ 雨時陰", "303": "❄️ 雨時雪",
-            "311": "🌦️ 雨後晴", "313": "🌧️ 雨後陰", "314": "❄️ 雨後雪",
-            "400": "❄️ 雪", "401": "❄️ 雪時晴", "402": "❄️ 雪時陰", "403": "❄️ 雪時雨",
-            "411": "❄️ 雪後晴", "413": "❄️ 雪後陰", "414": "❄️ 雪後雨"
-        };
-        function getWeatherStr(code) { return jmaCodes[code] || "☁️ 多雲"; }
+        targetDates.forEach(dateStr => { const el = document.querySelector(`.weather-info.tenki[data-date="${dateStr}"]`); if (el) el.innerHTML = `<span class="source-label">[tenki.jp]</span> ${tenkiData[dateStr]}`; });
 
         try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('JMA API 連線失敗');
+            const response = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json');
+            if (!response.ok) throw new Error('API 連線失敗');
             const data = await response.json();
-            
             const weekForecast = data.find(d => d.timeSeries && d.timeSeries[0].timeDefines.length > 3) || data[1];
-            if (!weekForecast) throw new Error('無法取得一週預報結構');
-
-            const timeSeriesWeather = weekForecast.timeSeries.find(ts => ts.areas[0].weatherCodes);
-            const timeSeriesPop = weekForecast.timeSeries.find(ts => ts.areas[0].pops);
-            const timeSeriesTemp = weekForecast.timeSeries.find(ts => ts.areas[0].tempsMin !== undefined || ts.areas[0].tempsMax !== undefined);
-
-            const weatherDates = timeSeriesWeather ? timeSeriesWeather.timeDefines.map(dt => dt.split('T')[0]) : [];
-            const popDates = timeSeriesPop ? timeSeriesPop.timeDefines.map(dt => dt.split('T')[0]) : [];
-            const tempDates = timeSeriesTemp ? timeSeriesTemp.timeDefines.map(dt => dt.split('T')[0]) : [];
             
-            const weatherCodes = timeSeriesWeather ? timeSeriesWeather.areas[0].weatherCodes : [];
-            const pops = timeSeriesPop ? timeSeriesPop.areas[0].pops : [];
-            const tempsMin = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMin ? timeSeriesTemp.areas[0].tempsMin : [];
-            const tempsMax = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMax ? timeSeriesTemp.areas[0].tempsMax : [];
+            const tsWeather = weekForecast.timeSeries.find(ts => ts.areas[0].weatherCodes);
+            const tsPop = weekForecast.timeSeries.find(ts => ts.areas[0].pops);
+            const tsTemp = weekForecast.timeSeries.find(ts => ts.areas[0].tempsMin !== undefined || ts.areas[0].tempsMax !== undefined);
+
+            const weatherDates = tsWeather ? tsWeather.timeDefines.map(dt => dt.split('T')[0]) : [];
+            const codes = tsWeather ? tsWeather.areas[0].weatherCodes : [];
+            const pops = tsPop ? tsPop.areas[0].pops : [];
+            const tempsMin = tsTemp && tsTemp.areas[0].tempsMin ? tsTemp.areas[0].tempsMin : [];
+            const tempsMax = tsTemp && tsTemp.areas[0].tempsMax ? tsTemp.areas[0].tempsMax : [];
+
+            const jmaCodes = { "100": "☀️ 晴朗", "101": "🌤️ 晴時多雲", "200": "☁️ 陰天", "201": "⛅ 陰時晴", "202": "🌧️ 陰陣雨", "300": "🌧️ 雨", "313": "🌧️ 雨後陰", "314": "❄️ 雨後雪" };
 
             targetDates.forEach(dateStr => {
                 const jmaEl = document.querySelector(`.weather-info.jma[data-date="${dateStr}"]`);
                 if (!jmaEl) return;
-
-                const dateIndex = weatherDates.indexOf(dateStr);
-                if (dateIndex !== -1) {
-                    const code = weatherCodes[dateIndex];
-                    const weatherText = getWeatherStr(code);
-
-                    const popIndex = popDates.indexOf(dateStr);
-                    let pop = popIndex !== -1 && pops[popIndex] ? pops[popIndex] : "--";
-                    if(pop === "") pop = "--"; 
-
-                    const tempIndex = tempDates.indexOf(dateStr);
-                    let minT = tempIndex !== -1 && tempsMin[tempIndex] ? tempsMin[tempIndex] : "--";
-                    let maxT = tempIndex !== -1 && tempsMax[tempIndex] ? tempsMax[tempIndex] : "--";
-                    if(minT === "") minT = "--";
-                    if(maxT === "") maxT = "--";
-
-                    jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ${weatherText} | 🌡️ ${minT}°C - ${maxT}°C | 降雨機率 ${pop}%`;
+                const idx = weatherDates.indexOf(dateStr);
+                if (idx !== -1) {
+                    const text = jmaCodes[codes[idx]] || "☁️ 多雲";
+                    let pop = tsPop && pops[idx] ? pops[idx] : "--"; if(pop==="") pop="--";
+                    let minT = tsTemp && tempsMin[idx] ? tempsMin[idx] : "--"; if(minT==="") minT="--";
+                    let maxT = tsTemp && tempsMax[idx] ? tempsMax[idx] : "--"; if(maxT==="") maxT="--";
+                    jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ${text} | 🌡️ ${minT}°C - ${maxT}°C | 降雨機率 ${pop}%`;
                 } else {
                     jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⏳ 尚無此日期預報`;
                 }
             });
-        } catch (error) {
-            console.error("無法取得 JMA 天氣資料:", error);
-            targetDates.forEach(dateStr => {
-                const jmaEl = document.querySelector(`.weather-info.jma[data-date="${dateStr}"]`);
-                if(jmaEl) jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⚠️ 預報載入失敗`;
-            });
-        }
+        } catch (error) { console.error("JMA 失敗:", error); }
     }
+    
+    document.addEventListener("DOMContentLoaded", fetchNagoyaWeather);
 </script>
 
 </body>
