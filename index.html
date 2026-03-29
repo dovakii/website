@@ -54,10 +54,10 @@
         .weather-box { display: flex; flex-direction: column; gap: 6px; }
         .weather-info { font-size: 0.85rem; color: #555; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid transparent; min-height: 24px; }
         .weather-info.jma { background: #e3f2fd; border-color: #bbdefb; }
-        .weather-info.tenki { background: #fff3e0; border-color: #ffe0b2; }
+        .weather-info.om { background: #fff3e0; border-color: #ffe0b2; } /* 改用 om 代替 tenki */
         .source-label { font-weight: 700; margin-right: 8px; }
         .weather-info.jma .source-label { color: #1565c0; }
-        .weather-info.tenki .source-label { color: #e65100; }
+        .weather-info.om .source-label { color: #e65100; }
         .day-tag { background: #ffebee; color: var(--deep-pink); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; white-space: nowrap; }
 
         /* --- Checklist --- */
@@ -164,7 +164,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">3/30 (一) 鐵道迷之夢</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-30"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-03-30"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-30"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-03-30"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag">宿：樂高飯店</span>
         </div>
@@ -183,7 +183,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">3/31 (二) 樂高樂園全攻略 (A方案)</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-03-31"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-03-31"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag">宿：樂高飯店</span>
         </div>
@@ -201,7 +201,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">3/31 (二) 水族館與 Lalaport (雨天 B方案)</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-03-31"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-03-31"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-03-31"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color: #2196f3; background: #e3f2fd;">宿：樂高飯店</span>
         </div>
@@ -221,7 +221,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/01 (三) 虎鯨與舒適轉場 (A方案)</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-04-01"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-04-01"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#039be5;">宿：萬豪飯店</span>
         </div>
@@ -239,7 +239,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/01 (三) 樂高樂園與轉場 (雨天 B方案)</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-04-01"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-01"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-04-01"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#d32f2f; background: #ffebee;">宿：萬豪飯店</span>
         </div>
@@ -259,7 +259,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/02 (四) 吉卜力專車一日遊</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-02"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-04-02"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-02"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-04-02"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="background:#7cb342; color:white;">🚌 Klook 巴士團</span>
         </div>
@@ -278,7 +278,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/03 (五) 櫻花與燒肉</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-03"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-04-03"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-03"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-04-03"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#fb8c00;">宿：萬豪飯店</span>
         </div>
@@ -292,6 +292,7 @@
         <div class="timeline-item"><div class="timeline-header" onclick="toggleDetail(this)"><span class="time">17:30</span><span class="event-title">🥩 敘敘苑 名古屋名站店 (已訂位)</span><span class="toggle-icon">▼</span></div>
             <div class="event-details">
                 <div class="detail-point">位於 Ｍ三ダイニングビル 9F。**必點**：上等牛五花、牛舌。</div>
+                <div class="detail-point">訂位姓名：Hsieh PingHsun。</div>
             </div>
         </div>
     </div>
@@ -300,7 +301,7 @@
         <div class="day-header">
             <div class="day-title-wrap">
                 <span class="day-title">4/04 (六) 再見名古屋</span>
-                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-04"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info tenki" data-date="2026-04-04"><span class="source-label">[tenki.jp]</span> ⏳ 載入中...</div></div>
+                <div class="weather-box"><div class="weather-info jma" data-date="2026-04-04"><span class="source-label">[JMA]</span> ⏳ 載入中...</div><div class="weather-info om" data-date="2026-04-04"><span class="source-label">[Open-Meteo]</span> ⏳ 載入中...</div></div>
             </div>
             <span class="day-tag" style="color:#757575;">✈️ CI155</span>
         </div>
@@ -337,16 +338,13 @@
         
         document.getElementById('btnPlanA').classList.toggle('active', plan === 'A');
         document.getElementById('btnPlanB').classList.toggle('active', plan === 'B');
-        
         localStorage.setItem('nagoyaTripPlan_2026', plan);
     }
-    
-    // 載入時讀取上次選擇的方案
     const savedPlan = localStorage.getItem('nagoyaTripPlan_2026') || 'A';
     switchPlan(savedPlan);
 
     // ==========================================
-    // 1. Firebase 雲端設定區
+    // 1. Firebase 雲端 DB 邏輯
     // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAfrge29Wjzj380rhYWuuunV-zUHaEBE3k",
@@ -359,27 +357,17 @@
         measurementId: "G-K96ST9SPLT"
     };
 
-    // ==========================================
-    // 2. 雲端 DB 邏輯 (只讀取/修改，絕不覆蓋)
-    // ==========================================
     let db; let isFirebaseReady = false;
-    
-    // 繼續沿用原資料庫節點，確保您已經輸入的心血完整保留
     const DB_NODE_NAME = 'nagoya_trip_checklist_2026'; 
 
     if(firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
         isFirebaseReady = true;
-    } else {
-        document.querySelectorAll('.loading-msg').forEach(el => el.innerHTML = "⚠️ 未設定 Firebase 金鑰");
     }
 
     if(isFirebaseReady) {
-        const tripRef = db.ref(DB_NODE_NAME);
-
-        // 監聽資料變更，直接繪製
-        tripRef.on('value', snapshot => {
+        db.ref(DB_NODE_NAME).on('value', snapshot => {
             const data = snapshot.val() || {};
             renderCloudChecklist(data);
             document.querySelectorAll('.sync-dot').forEach(dot => dot.classList.add('online'));
@@ -392,8 +380,6 @@
             const ul = section.querySelector('.checklist-items');
             ul.innerHTML = ''; 
 
-            // 💡 智慧對接：如果 Firebase 中有您原本舊版的 day2 或 day3 資料
-            // 系統會自動將它們顯示在現在的 A方案 (day2_A / day3_A) 裡面，保護您的資料！
             let dayData = data[dayId];
             if (!dayData) {
                 if (dayId === 'day2_A') dayData = data['day2'];
@@ -418,39 +404,27 @@
     }
 
     window.addChecklistItem = function(btnElement) {
-        if(!isFirebaseReady) return alert("請填寫 Firebase Config");
+        if(!isFirebaseReady) return;
         const input = btnElement.previousElementSibling; const text = input.value.trim(); if (!text) return;
-        
         let dayId = btnElement.closest('.checklist-section').dataset.day; 
         const newItemId = `item_${Date.now()}`;
-        
-        // 將新增的資料寫入對應的節點
         db.ref(`${DB_NODE_NAME}/${dayId}/${newItemId}`).set({ text: text, checked: false });
         input.value = "";
     }
 
     window.deleteCloudItem = function(btnElement) {
         if(!isFirebaseReady) return;
-        const li = btnElement.closest('li'); 
-        let dayId = li.closest('.checklist-section').dataset.day; 
-        const itemId = li.querySelector('input').id;
-        
-        // 智慧對接的刪除邏輯：如果您是在 A 方案刪除原本舊的 day2 資料，要刪對地方
+        const li = btnElement.closest('li'); let dayId = li.closest('.checklist-section').dataset.day; const itemId = li.querySelector('input').id;
         if (dayId === 'day2_A' && itemId.startsWith('d2_')) dayId = 'day2';
         if (dayId === 'day3_A' && itemId.startsWith('d3_')) dayId = 'day3';
-
         db.ref(`${DB_NODE_NAME}/${dayId}/${itemId}`).remove();
     }
 
     document.addEventListener('change', (e) => {
         if (e.target.type === 'checkbox' && e.target.closest('.checklist-section') && isFirebaseReady) {
-            let dayId = e.target.closest('.checklist-section').dataset.day; 
-            const itemId = e.target.id;
-            
-            // 智慧對接的打勾邏輯
+            let dayId = e.target.closest('.checklist-section').dataset.day; const itemId = e.target.id;
             if (dayId === 'day2_A' && itemId.startsWith('d2_')) dayId = 'day2';
             if (dayId === 'day3_A' && itemId.startsWith('d3_')) dayId = 'day3';
-
             db.ref(`${DB_NODE_NAME}/${dayId}/${itemId}`).update({ checked: e.target.checked });
         }
     });
@@ -458,100 +432,110 @@
     function handleChecklistEnter(event, inputElement) { if (event.key === "Enter") window.addChecklistItem(inputElement.nextElementSibling); }
 
     // ==========================================
-    // 3. UI 與完整天氣抓取 (完美還原版)
+    // 3. UI 互動與雙重動態天氣 API 抓取
     // ==========================================
     function toggleDetail(element) { element.nextElementSibling.classList.toggle('show'); element.parentElement.classList.toggle('active'); }
-    function toggleMap(mapId) { document.getElementById(mapId).classList.toggle('active'); }
 
-    async function fetchNagoyaWeather() {
-        // ⭐ tenki.jp 預報資料 (還原詳細文字)
-        const tenkiData = {
-            "2026-03-30": "🌧️ 陰短暫雨 | 🌡️ 13°C - 21°C | 降雨機率 60%",
-            "2026-03-31": "🌧️ 陰短暫雨 | 🌡️ 13°C - 20°C | 降雨機率 60%",
-            "2026-04-01": "☁️ 陰天 | 🌡️ 10°C - 19°C | 降雨機率 --%",
-            "2026-04-02": "⛅ 陰時多雲 | 🌡️ 11°C - 22°C | 降雨機率 --%",
-            "2026-04-03": "🌧️ 陰短暫雨 | 🌡️ 12°C - 21°C | 降雨機率 60%",
-            "2026-04-04": "☁️ 陰天 | 🌡️ 13°C - 20°C | 降雨機率 --%"
-        };
+    // 判斷日期是否已過 (比對日本時間)
+    function isPastDate(targetDateStr) {
+        const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }); // 產出 YYYY-MM-DD
+        return targetDateStr < todayStr;
+    }
 
+    async function fetchWeatherAll() {
         const targetDates = ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04"];
-
-        // 1. 先將 tenki.jp 的資料寫入對應的 HTML 區塊
-        targetDates.forEach(dateStr => {
-            document.querySelectorAll(`.weather-info.tenki[data-date="${dateStr}"]`).forEach(el => {
-                el.innerHTML = `<span class="source-label">[tenki.jp]</span> ${tenkiData[dateStr]}`;
-            });
-        });
-
-        // 2. 透過 API 抓取 JMA 預報資料 (還原完整溫度與降雨機率)
-        const url = 'https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json';
-        const jmaCodes = {
-            "100": "☀️ 晴朗", "101": "🌤️ 晴時多雲", "102": "⛅ 晴陣雨", "104": "❄️ 晴陣雪",
-            "110": "🌤️ 晴後多雲", "111": "🌤️ 晴後多雲", "112": "🌧️ 晴後陣雨", "114": "❄️ 晴後陣雪",
-            "200": "☁️ 陰天", "201": "⛅ 陰時晴", "202": "🌧️ 陰陣雨", "204": "❄️ 陰陣雪",
-            "210": "⛅ 陰後晴", "211": "⛅ 陰後晴", "212": "🌧️ 陰後陣雨", "214": "❄️ 陰後陣雪",
-            "300": "🌧️ 雨", "301": "🌦️ 雨時晴", "302": "🌧️ 雨時陰", "303": "❄️ 雨時雪",
-            "311": "🌦️ 雨後晴", "313": "🌧️ 雨後陰", "314": "❄️ 雨後雪",
-            "400": "❄️ 雪", "401": "❄️ 雪時晴", "402": "❄️ 雪時陰", "403": "❄️ 雪時雨",
-            "411": "❄️ 雪後晴", "413": "❄️ 雪後陰", "414": "❄️ 雪後雨"
-        };
-        function getWeatherStr(code) { return jmaCodes[code] || "☁️ 多雲"; }
-
+        
+        // ----------------------------------------------------
+        // 氣象源 1：Open-Meteo API (精準的全球開源氣象庫)
+        // ----------------------------------------------------
         try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('JMA API 連線失敗');
-            const data = await response.json();
+            const omUrl = 'https://api.open-meteo.com/v1/forecast?latitude=35.1815&longitude=136.9064&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo';
+            const omRes = await fetch(omUrl);
+            const omData = await omRes.json();
             
-            const weekForecast = data.find(d => d.timeSeries && d.timeSeries[0].timeDefines.length > 3) || data[1];
-            if (!weekForecast) throw new Error('無法取得一週預報結構');
-
-            const timeSeriesWeather = weekForecast.timeSeries.find(ts => ts.areas[0].weatherCodes);
-            const timeSeriesPop = weekForecast.timeSeries.find(ts => ts.areas[0].pops);
-            const timeSeriesTemp = weekForecast.timeSeries.find(ts => ts.areas[0].tempsMin !== undefined || ts.areas[0].tempsMax !== undefined);
-
-            const weatherDates = timeSeriesWeather ? timeSeriesWeather.timeDefines.map(dt => dt.split('T')[0]) : [];
-            const popDates = timeSeriesPop ? timeSeriesPop.timeDefines.map(dt => dt.split('T')[0]) : [];
-            const tempDates = timeSeriesTemp ? timeSeriesTemp.timeDefines.map(dt => dt.split('T')[0]) : [];
-            
-            const weatherCodes = timeSeriesWeather ? timeSeriesWeather.areas[0].weatherCodes : [];
-            const pops = timeSeriesPop ? timeSeriesPop.areas[0].pops : [];
-            const tempsMin = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMin ? timeSeriesTemp.areas[0].tempsMin : [];
-            const tempsMax = timeSeriesTemp && timeSeriesTemp.areas[0].tempsMax ? timeSeriesTemp.areas[0].tempsMax : [];
+            // Open-Meteo WMO 天氣代碼轉換
+            const omCodes = {
+                0: "☀️ 晴朗", 1: "🌤️ 多雲", 2: "⛅ 多雲", 3: "☁️ 陰天", 45: "🌫️ 霧", 48: "🌫️ 霧",
+                51: "🌧️ 小陣雨", 53: "🌧️ 陣雨", 55: "🌧️ 大陣雨", 61: "🌧️ 小雨", 63: "🌧️ 雨", 65: "🌧️ 大雨",
+                71: "❄️ 小雪", 73: "❄️ 雪", 75: "❄️ 大雪", 95: "⛈️ 雷雨", 96: "⛈️ 雷陣雨", 99: "⛈️ 暴雷雨"
+            };
 
             targetDates.forEach(dateStr => {
-                const dateIndex = weatherDates.indexOf(dateStr);
-                
+                document.querySelectorAll(`.weather-info.om[data-date="${dateStr}"]`).forEach(el => {
+                    if (isPastDate(dateStr)) {
+                        el.innerHTML = `<span class="source-label">[Open-Meteo]</span> 📅 日期已過`;
+                        return;
+                    }
+                    const idx = omData.daily.time.indexOf(dateStr);
+                    if (idx !== -1) {
+                        const code = omData.daily.weathercode[idx];
+                        const text = omCodes[code] || "☁️ 多雲";
+                        const min = Math.round(omData.daily.temperature_2m_min[idx]);
+                        const max = Math.round(omData.daily.temperature_2m_max[idx]);
+                        const pop = omData.daily.precipitation_probability_max[idx];
+                        el.innerHTML = `<span class="source-label">[Open-Meteo]</span> ${text} | 🌡️ ${min}°C - ${max}°C | 降雨機率 ${pop}%`;
+                    } else {
+                        el.innerHTML = `<span class="source-label">[Open-Meteo]</span> ⏳ 尚無預報`;
+                    }
+                });
+            });
+        } catch(e) { console.error("Open-Meteo 失敗:", e); }
+
+        // ----------------------------------------------------
+        // 氣象源 2：JMA 日本氣象廳 API (雙重疊加解析法)
+        // ----------------------------------------------------
+        try {
+            const jmaRes = await fetch('https://www.jma.go.jp/bosai/forecast/data/forecast/230000.json');
+            const jmaData = await jmaRes.json();
+            
+            const jmaCodes = {
+                "100": "☀️ 晴朗", "101": "🌤️ 晴時多雲", "102": "⛅ 晴陣雨", "110": "🌤️ 晴後多雲", "111": "🌤️ 晴後多雲", "112": "🌧️ 晴後陣雨",
+                "200": "☁️ 陰天", "201": "⛅ 陰時晴", "202": "🌧️ 陰陣雨", "210": "⛅ 陰後晴", "211": "⛅ 陰後晴", "212": "🌧️ 陰後陣雨",
+                "300": "🌧️ 雨", "301": "🌦️ 雨時晴", "302": "🌧️ 雨時陰", "311": "🌦️ 雨後晴", "313": "🌧️ 雨後陰", "400": "❄️ 雪"
+            };
+
+            const forecastMap = {};
+            const processTimeSeries = (tsList) => {
+                if (!tsList) return;
+                const weatherBlock = tsList.find(ts => ts.areas[0].weatherCodes);
+                const popBlock = tsList.find(ts => ts.areas[0].pops);
+                const tempBlock = tsList.find(ts => ts.areas[0].tempsMin !== undefined || ts.areas[0].tempsMax !== undefined || ts.areas[0].temps !== undefined);
+
+                if (weatherBlock) weatherBlock.timeDefines.forEach((t, i) => { const d = t.split('T')[0]; if (!forecastMap[d]) forecastMap[d] = {}; if (!forecastMap[d].code) forecastMap[d].code = weatherBlock.areas[0].weatherCodes[i]; });
+                if (popBlock) popBlock.timeDefines.forEach((t, i) => { const d = t.split('T')[0]; if (!forecastMap[d]) forecastMap[d] = {}; const popVal = popBlock.areas[0].pops[i]; if (popVal && popVal !== "") forecastMap[d].pop = popVal; });
+                if (tempBlock) tempBlock.timeDefines.forEach((t, i) => { 
+                    const d = t.split('T')[0]; if (!forecastMap[d]) forecastMap[d] = {};
+                    if (tempBlock.areas[0].tempsMin && tempBlock.areas[0].tempsMin[i] !== "") forecastMap[d].min = tempBlock.areas[0].tempsMin[i];
+                    if (tempBlock.areas[0].tempsMax && tempBlock.areas[0].tempsMax[i] !== "") forecastMap[d].max = tempBlock.areas[0].tempsMax[i];
+                    if (tempBlock.areas[0].temps && tempBlock.areas[0].temps[i] !== "" && !forecastMap[d].min) forecastMap[d].min = tempBlock.areas[0].temps[i];
+                });
+            };
+
+            if(jmaData[0] && jmaData[0].timeSeries) processTimeSeries(jmaData[0].timeSeries);
+            if(jmaData[1] && jmaData[1].timeSeries) processTimeSeries(jmaData[1].timeSeries);
+
+            targetDates.forEach(dateStr => {
                 document.querySelectorAll(`.weather-info.jma[data-date="${dateStr}"]`).forEach(jmaEl => {
-                    if (dateIndex !== -1) {
-                        const code = weatherCodes[dateIndex];
-                        const weatherText = getWeatherStr(code);
-
-                        const popIndex = popDates.indexOf(dateStr);
-                        let pop = popIndex !== -1 && pops[popIndex] ? pops[popIndex] : "--";
-                        if(pop === "") pop = "--"; 
-
-                        const tempIndex = tempDates.indexOf(dateStr);
-                        let minT = tempIndex !== -1 && tempsMin[tempIndex] ? tempsMin[tempIndex] : "--";
-                        let maxT = tempIndex !== -1 && tempsMax[tempIndex] ? tempsMax[tempIndex] : "--";
-                        if(minT === "") minT = "--";
-                        if(maxT === "") maxT = "--";
-
-                        jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ${weatherText} | 🌡️ ${minT}°C - ${maxT}°C | 降雨機率 ${pop}%`;
+                    if (isPastDate(dateStr)) {
+                        jmaEl.innerHTML = `<span class="source-label">[JMA]</span> 📅 日期已過`;
+                        return;
+                    }
+                    const fd = forecastMap[dateStr];
+                    if (fd && fd.code) {
+                        const text = jmaCodes[fd.code] || "☁️ 多雲";
+                        const pop = fd.pop || "--";
+                        const minT = fd.min || "--";
+                        const maxT = fd.max || "--";
+                        jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ${text} | 🌡️ ${minT}°C - ${maxT}°C | 降雨機率 ${pop}%`;
                     } else {
                         jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⏳ 尚無此日期預報`;
                     }
                 });
             });
-        } catch (error) { 
-            console.error("無法取得 JMA 天氣資料:", error); 
-            targetDates.forEach(dateStr => {
-                document.querySelectorAll(`.weather-info.jma[data-date="${dateStr}"]`).forEach(jmaEl => {
-                    jmaEl.innerHTML = `<span class="source-label">[JMA]</span> ⚠️ 預報載入失敗`;
-                });
-            });
-        }
+        } catch(e) { console.error("JMA 失敗:", e); }
     }
-    document.addEventListener("DOMContentLoaded", fetchNagoyaWeather);
+    
+    document.addEventListener("DOMContentLoaded", fetchWeatherAll);
 </script>
 
 </body>
